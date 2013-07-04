@@ -1,0 +1,9 @@
+clean_threshold_hours: 800
+donators:
+  darthsalamon:
+    ips:
+    - 80.60.73.144
+    - 213.211.159.63
+    last_login: Fri, 9 Nov 2012 03:09:14 -0500
+    custom_login_message: ''
+    is_activated: true

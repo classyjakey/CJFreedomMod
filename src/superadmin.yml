@@ -1,0 +1,42 @@
+clean_threshold_hours: 168
+superadmins:
+  darthsalamon:
+    ips:
+    - 80.60.73.144
+    - 213.211.159.63
+    last_login: Fri, 9 Nov 2012 03:09:14 -0500
+    custom_login_message: a &5Developer&b!
+    is_senior_admin: true
+    console_aliases:
+    - darth
+    is_activated: true
+  madgeek1450:
+    ips:
+    - 127.0.0.1
+    - 8.8.8.8
+    last_login: Sun, 11 Nov 2012 01:09:14 -0500
+    custom_login_message: the &5Chief-Developer&b and &6Master-ass-kicker&b.
+    is_senior_admin: true
+    console_aliases:
+    - madgeek
+    is_activated: true
+  wild1145:
+    ips:
+    - 2.97.112.149
+    last_login: Sat, 10 Nov 2018 02:09:14 -0500
+    custom_login_message: .a &5Developer&b.
+    is_senior_admin: true
+    console_aliases: []
+    is_activated: true
+  console:
+    ips:
+    - 127.0.0.1
+    last_login: Fri, 9 Nov 2014 03:09:14 -0500
+    custom_login_message: ''
+    is_senior_admin: true
+    console_aliases:
+    - Rcon
+    - RCON
+    - CONSOLE
+    - Console
+    is_activated: true
