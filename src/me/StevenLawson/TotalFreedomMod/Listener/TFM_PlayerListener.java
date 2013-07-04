@@ -761,8 +761,8 @@ public class TFM_PlayerListener implements Listener
     {
         //event.setMotd(ChatColor.translateAlternateColorCodes('&', event.getMotd()));
 
-        event.setMotd(TFM_Util.randomChatColor() + "Total" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY
-                + "-" + TFM_Util.randomChatColor() + " Bukkit v" + TFM_ServerInterface.getVersion());
+        event.setMotd(TFM_Util.randomChatColor() + "CJ" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY
+                + "-" + TFM_Util.randomChatColor() + " CraftBukkit v" + TFM_ServerInterface.getVersion());
 
         if (TFM_ServerInterface.isIPBanned(event.getAddress().getHostAddress()))
         {

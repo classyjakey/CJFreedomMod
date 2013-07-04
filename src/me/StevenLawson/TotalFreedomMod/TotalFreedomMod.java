@@ -35,6 +35,8 @@ public class TotalFreedomMod extends JavaPlugin
     public static final String CONFIG_FILE = "config.yml";
     public static final String SUPERADMIN_FILE = "superadmin.yml";
     public static final String PERMBAN_FILE = "permban.yml";
+    public static final String BACKUP_FILE = "autobackup.php";
+    public static final String DONATOR_FILE = "donator.yml";        
     public static final String PROTECTED_AREA_FILE = "protectedareas.dat";
     public static final String SAVED_FLAGS_FILE = "savedflags.dat";
 
@@ -73,6 +75,7 @@ public class TotalFreedomMod extends JavaPlugin
         loadMainConfig();
         loadSuperadminConfig();
         loadPermbanConfig();
+        loadDonatorConfig();
 
         TFM_UserList.getInstance(this);
 
@@ -296,6 +299,22 @@ public class TotalFreedomMod extends JavaPlugin
     @Deprecated
     public static List<String> superadmin_ips = new ArrayList<String>();
 
+    public static void loadDonatorConfig()
+    {
+        try
+        {
+            TFM_DonatorList.backupSavedList();
+            TFM_DonatorList.loadDonatorList();
+
+            superadmins = TFM_DonatorList.getSuperadminNames();
+            superadmin_ips = TFM_DonatorList.getSuperadminIPs();
+        }
+        catch (Exception ex)
+        {
+            TFM_Log.severe("Error loading donator list: " + ex.getMessage());
+        }
+    }
+    
     public static void loadSuperadminConfig()
     {
         try
