@@ -30,15 +30,13 @@ public class TotalFreedomMod extends JavaPlugin
     public static final Server server = Bukkit.getServer();
 
     public static final long HEARTBEAT_RATE = 5L; //Seconds
+    public static final long SERVICE_CHECKER_RATE = 30L;
 
     public static final String CONFIG_FILE = "config.yml";
     public static final String SUPERADMIN_FILE = "superadmin.yml";
-    public static final String DONATOR_FILE = "donator.yml";
-    public static final String BACKUP_FILE = "autobackup.php";
     public static final String PERMBAN_FILE = "permban.yml";
     public static final String PROTECTED_AREA_FILE = "protectedareas.dat";
     public static final String SAVED_FLAGS_FILE = "savedflags.dat";
-    
 
     public static final String COMMAND_PATH = "me.StevenLawson.TotalFreedomMod.Commands";
     public static final String COMMAND_PREFIX = "Command_";
@@ -75,7 +73,6 @@ public class TotalFreedomMod extends JavaPlugin
         loadMainConfig();
         loadSuperadminConfig();
         loadPermbanConfig();
-        loadDonatorConfig();
 
         TFM_UserList.getInstance(this);
 
@@ -106,9 +103,15 @@ public class TotalFreedomMod extends JavaPlugin
 
         TFM_Util.deleteFolder(new File("./_deleteme"));
 
+        // Heartbeat
         server.getScheduler().scheduleSyncRepeatingTask(this, new TFM_Heartbeat(this), HEARTBEAT_RATE * 20L, HEARTBEAT_RATE * 20L);
 
+        // Service uptime checker
+        server.getScheduler().scheduleSyncRepeatingTask(this, TFM_ServiceChecker.checker, SERVICE_CHECKER_RATE * 20L, 5 * 20L);
+
         TFM_CommandLoader.getInstance().scan();
+
+
 
         // metrics @ http://mcstats.org/plugin/TotalFreedomMod
         try
@@ -199,14 +202,14 @@ public class TotalFreedomMod extends JavaPlugin
         return true;
     }
 
-   
-    public static boolean allowSplashPotions = false;
     public static boolean allowFirePlace = false;
     public static Boolean allowFireSpread = false;
     public static Boolean allowLavaDamage = false;
     public static boolean allowLavaPlace = false;
     public static boolean allowWaterPlace = false;
     public static Boolean allowExplosions = false;
+    public static boolean allowFliudSpread = false;
+    public static boolean allowTntMinecarts = false;
     public static double explosiveRadius = 4.0D;
     public static boolean autoEntityWipe = true;
     public static boolean nukeMonitor = true;
@@ -228,12 +231,11 @@ public class TotalFreedomMod extends JavaPlugin
     public static boolean tossmobEnabled = false;
     public static boolean generateFlatlands = true;
     public static String flatlandsGenerationParams = "16,stone,32,dirt,1,grass";
-    public static boolean allowFliudSpread = false;
     public static boolean adminOnlyMode = false;
     public static boolean protectedAreasEnabled = true;
     public static boolean autoProtectSpawnpoints = true;
     public static double autoProtectRadius = 25.0D;
-    public static List<String> host_sender_names = Arrays.asList("remotebukkit");
+    public static List<String> host_sender_names = Arrays.asList("rcon", "remotebukkit");
     public static boolean twitterbotEnabled = false;
     public static String twitterbotUrl = "http://tftwitter.darthcraft.net/";
     public static String twitterbotSecret = "";
@@ -245,13 +247,13 @@ public class TotalFreedomMod extends JavaPlugin
             TFM_Util.createDefaultConfiguration(CONFIG_FILE, plugin_file);
             FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), CONFIG_FILE));
 
-            allowSplashPotions = config.getBoolean("allow_Splash_pots", allowSplashPotions);
             allowFirePlace = config.getBoolean("allow_fire_place", allowFirePlace);
             allowFireSpread = config.getBoolean("allow_fire_spread", allowFireSpread);
             allowLavaDamage = config.getBoolean("allow_lava_damage", allowLavaDamage);
             allowLavaPlace = config.getBoolean("allow_lava_place", allowLavaPlace);
             allowWaterPlace = config.getBoolean("allow_water_place", allowWaterPlace);
             allowExplosions = config.getBoolean("allow_explosions", allowExplosions);
+            allowTntMinecarts = config.getBoolean("allow_tnt_minecarts", allowTntMinecarts);
             explosiveRadius = config.getDouble("explosiveRadius", explosiveRadius);
             autoEntityWipe = config.getBoolean("auto_wipe", autoEntityWipe);
             nukeMonitor = config.getBoolean("nuke_monitor", nukeMonitor);
@@ -293,23 +295,6 @@ public class TotalFreedomMod extends JavaPlugin
     public static List<String> superadmins = new ArrayList<String>();
     @Deprecated
     public static List<String> superadmin_ips = new ArrayList<String>();
-    
-      public static void loadDonatorConfig()
-    {
-        try
-        {
-            TFM_DonatorList.backupSavedList();
-            TFM_DonatorList.loadDonatorList();
-
-            superadmins = TFM_DonatorList.getSuperadminNames();
-            superadmin_ips = TFM_DonatorList.getSuperadminIPs();
-        }
-        catch (Exception ex)
-        {
-            TFM_Log.severe("Error loading donator list: " + ex.getMessage());
-        }
-    }
-
 
     public static void loadSuperadminConfig()
     {

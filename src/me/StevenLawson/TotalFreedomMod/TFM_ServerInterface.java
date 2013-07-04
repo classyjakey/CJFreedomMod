@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
-import net.minecraft.server.v1_5_R3.BanEntry;
-import net.minecraft.server.v1_5_R3.BanList;
-import net.minecraft.server.v1_5_R3.MinecraftServer;
-import net.minecraft.server.v1_5_R3.PlayerList;
-import net.minecraft.server.v1_5_R3.PropertyManager;
+import net.minecraft.server.v1_6_R1.BanEntry;
+import net.minecraft.server.v1_6_R1.BanList;
+import net.minecraft.server.v1_6_R1.MinecraftServer;
+import net.minecraft.server.v1_6_R1.PlayerList;
+import net.minecraft.server.v1_6_R1.PropertyManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -276,20 +276,20 @@ public class TFM_ServerInterface
             }
         }
         else // if user is superadmin
-        {    
+        {
             // force-allow superadmins to log in
             event.allow();
-            
+
             if (isIPBanned(player_ip))
             {
                 unbanIP(player_ip);
             }
-            
+
             if (isNameBanned(player_name))
             {
                 unbanUsername(player_name);
             }
-            
+
             for (Player test_player : server.getOnlinePlayers())
             {
                 if (test_player.getName().equalsIgnoreCase(player_name))
@@ -297,7 +297,7 @@ public class TFM_ServerInterface
                     test_player.kickPlayer("An admin just logged in with the username you are using.");
                 }
             }
-            
+
             if (server.getOnlinePlayers().length >= server.getMaxPlayers())
             {
                 for (Player op : server.getOnlinePlayers())
@@ -308,7 +308,7 @@ public class TFM_ServerInterface
                         return;
                     }
                 }
-                
+
                 // if the server is full of superadmins, however unlikely that might be, this will prevent an infinite loop.
                 if (server.getOnlinePlayers().length >= server.getMaxPlayers())
                 {
@@ -316,5 +316,10 @@ public class TFM_ServerInterface
                 }
             }
         }
+    }
+
+    public static String getVersion()
+    {
+        return MinecraftServer.getServer().getVersion();
     }
 }

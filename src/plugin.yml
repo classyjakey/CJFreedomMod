@@ -1,8 +1,7 @@
 name: TotalFreedomMod
 main: me.StevenLawson.TotalFreedomMod.TotalFreedomMod
-version: 2.18
+version: 2.20
 description: Plugin for the Total Freedom server.
-authors: [StevenLawson / Madgeek1450, JeromSar / DarthSalamon,  RyanWild / Wild1145, DanJones / HeXeRei452]
+authors: [StevenLawson / Madgeek1450, JeromSar / DarthSalamon]
 
-# plugin.yml is no longer used to define MOST commands.
-# /opme /creative and /survival will need to be re-added due to MCMyadmin using these commands!
+# plugin.yml is no longer used to define commands.

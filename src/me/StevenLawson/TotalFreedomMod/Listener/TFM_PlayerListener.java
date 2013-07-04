@@ -45,20 +45,34 @@ public class TFM_PlayerListener implements Listener
                 {
                     case WATER_BUCKET:
                     {
-                        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
-                        player.sendMessage(ChatColor.GRAY + "Water buckets are currently disabled.");
-                        event.setCancelled(true);
-                        return;
+                        if (!TotalFreedomMod.allowWaterPlace)
+                        {
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
+                            player.sendMessage(ChatColor.GRAY + "Water buckets are currently disabled.");
+                            event.setCancelled(true);
+                            return;
+                        }
                     }
                     case LAVA_BUCKET:
                     {
-                        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
-                        player.sendMessage(ChatColor.GRAY + "Lava buckets are currently disabled.");
-                        event.setCancelled(true);
+                        if (!TotalFreedomMod.allowLavaPlace)
+                        {
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
+                            player.sendMessage(ChatColor.GRAY + "Lava buckets are currently disabled.");
+                            event.setCancelled(true);
+                            return;
+                        }
                     }
-                    case POTION:
+                    case EXPLOSIVE_MINECART:
                     {
+                        if (!TotalFreedomMod.allowTntMinecarts)
+                        {
+                            player.getInventory().clear(player.getInventory().getHeldItemSlot());
+                            player.sendMessage(ChatColor.GRAY + "TNT minecarts are currently disabled.");
+                            event.setCancelled(true);
+                        }
                     }
+
                 }
                 break;
             }
@@ -98,7 +112,6 @@ public class TFM_PlayerListener implements Listener
                             }
 
                             event.setCancelled(true);
-                            return;
                         }
                         break;
                     }
@@ -517,6 +530,13 @@ public class TFM_PlayerListener implements Listener
                 block_command = true;
             }
         }
+        else if (Pattern.compile("^//?butcher").matcher(command).find())
+        {
+            if (!TFM_SuperadminList.isUserSuperadmin(p))
+            {
+                block_command = true;
+            }
+        }
 
         if (block_command)
         {
@@ -735,20 +755,30 @@ public class TFM_PlayerListener implements Listener
     {
         TFM_ServerInterface.handlePlayerLogin(event);
     }
-    
-    @EventHandler()
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerPing(ServerListPingEvent event)
     {
-        // Colorize :)
-        event.setMotd(ChatColor.translateAlternateColorCodes('&', event.getMotd()));
-        
+        //event.setMotd(ChatColor.translateAlternateColorCodes('&', event.getMotd()));
+
+        event.setMotd(TFM_Util.randomChatColor() + "Total" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY
+                + "-" + TFM_Util.randomChatColor() + " Bukkit v" + TFM_ServerInterface.getVersion());
+
         if (TFM_ServerInterface.isIPBanned(event.getAddress().getHostAddress()))
         {
-            event.setMotd(ChatColor.RED + "You are banned!");
+            event.setMotd(ChatColor.RED + "You are banned.");
         }
-        if (TotalFreedomMod.adminOnlyMode)
+        else if (TotalFreedomMod.adminOnlyMode)
         {
-            event.setMotd(ChatColor.RED + "Server in AdminMode!");
+            event.setMotd(ChatColor.RED + "Server is closed.");
+        }
+        else if (Bukkit.hasWhitelist())
+        {
+            event.setMotd(ChatColor.RED + "Whitelist enabled.");
+        }
+        else if (Bukkit.getOnlinePlayers().length >= Bukkit.getMaxPlayers())
+        {
+            event.setMotd(ChatColor.RED + "Server is full.");
         }
     }
 }

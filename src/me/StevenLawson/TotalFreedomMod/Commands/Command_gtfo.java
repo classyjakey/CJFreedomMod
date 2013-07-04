@@ -1,7 +1,9 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
+import me.StevenLawson.TotalFreedomMod.TFM_RollbackManager;
 import me.StevenLawson.TotalFreedomMod.TFM_ServerInterface;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
+import me.StevenLawson.TotalFreedomMod.TFM_WorldEditBridge;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -10,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.SUPER, source = SourceType.BOTH)
-@CommandParameters(description = "Makes someone GTFO (deop, ban ip, ban username and rollback all blocks!).", usage = "/<command> <partialname>")
+@CommandParameters(description = "Makes someone GTFO (deop and ip ban by username).", usage = "/<command> <partialname>")
 public class Command_gtfo extends TFM_Command
 {
     @Override
@@ -34,15 +36,12 @@ public class Command_gtfo extends TFM_Command
 
         TFM_Util.bcastMsg(p.getName() + " has been a VERY naughty, naughty boy.", ChatColor.RED);
 
-        // deop
-        p.setOp(true);
-        
-        //Undo WorldEdits:
-        server.dispatchCommand(p, "/undo 15");
-        
-        //rollback        
-        server.dispatchCommand(sender, "rollback " + p.getName());
-        
+        // Undo WorldEdits:
+        TFM_WorldEditBridge.getInstance().undo(p, 15);
+
+        // rollback
+        TFM_RollbackManager.rollback(p);
+
         // deop
         p.setOp(false);
 
@@ -77,7 +76,7 @@ public class Command_gtfo extends TFM_Command
         TFM_ServerInterface.banUsername(p.getName(), null, null, null);
 
         // kick Player:
-         p.kickPlayer("You have been banned by " + sender.getName() + "\n If you think you have been banned wrongly, appeal here: http://www.thecjgcjg.com/forum");
+        p.kickPlayer("GTFO");
 
         return true;
     }

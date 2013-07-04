@@ -17,7 +17,7 @@ public class Command_adminmode extends TFM_Command
         if (args[0].equalsIgnoreCase("off"))
         {
             TotalFreedomMod.adminOnlyMode = false;
-            TFM_Util.adminAction(sender.getName(), "Opening the server to all players.", false);
+            TFM_Util.adminAction(sender.getName(), "Opening the server to all players.", true);
             return true;
         }
         else if (args[0].equalsIgnoreCase("on"))

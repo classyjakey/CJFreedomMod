@@ -12,14 +12,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class TFM_BlockListener implements Listener
@@ -165,7 +161,7 @@ public class TFM_BlockListener implements Listener
                 }
             }
         }
-        
+
         switch (event.getBlockPlaced().getType())
         {
             case LAVA:
@@ -239,37 +235,7 @@ public class TFM_BlockListener implements Listener
                 break;
             }
         }
-        
     }
-    
-    @EventHandler
-public void onSplash(PotionSplashEvent event)
-{
-    ThrownPotion potion = event.getEntity();
-    Player p = (Player) potion.getShooter();
-   
-        if(TotalFreedomMod.allowSplashPotions)
-        {
-            TFM_Log.info(String.format("%s used a splash potion" , p.getName()));
-            p.getInventory().clear(p.getInventory().getHeldItemSlot());   
-        }
-        else
-        {
-            p.getInventory().setItem(p.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
-            p.sendMessage(ChatColor.GRAY + "Splash Potions are Currently Disabled.");
-            event.setCancelled(true);
-        }
-}
-    
-    @EventHandler(priority = EventPriority.HIGH)
-    public void ExplosionPrimeEvent(ExplosionPrimeEvent event)
-    {
-        
-        if (event.getEntity() instanceof ExplosiveMinecart)
-        {
-                event.setCancelled(true);
-        }
-     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event)
@@ -294,7 +260,6 @@ public void onSplash(PotionSplashEvent event)
     {
         TFM_RollbackManager.blockUpdate(event.getPlayer(), event.getBlock());
     }
-
 //    @EventHandler(priority = EventPriority.NORMAL)
 //    public void onCommandBlockChangeEvent(CommandBlockChangeEvent event)
 //    {

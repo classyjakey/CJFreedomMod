@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.SUPER, source = SourceType.BOTH)
-@CommandParameters(description = "Ban/Unban any player, even those who are not logged in anymore.", usage = "/<command> <ban | unban> <username>>")
+@CommandParameters(description = "Ban/Unban any player, even those who are not logged in anymore.", usage = "/<command> <purge | <ban | unban> <username>>")
 public class Command_glist extends TFM_Command
 {
     @Override
@@ -23,7 +23,27 @@ public class Command_glist extends TFM_Command
         {
             return false;
         }
-        
+
+        if (args.length == 1)
+        {
+            if (args[0].equalsIgnoreCase("purge"))
+            {
+                //Purge does not clear the banlist! This is not for clearing bans! This is for clearing the yaml file that stores the player/IP database!
+                if (TFM_SuperadminList.isSeniorAdmin(sender))
+                {
+                    TFM_UserList.getInstance(plugin).purge();
+                }
+                else
+                {
+                    playerMsg("Only Senior Admins may purge the userlist.");
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         else if (args.length == 2)
         {
             String username;
@@ -35,7 +55,6 @@ public class Command_glist extends TFM_Command
 
                 username = p.getName();
                 ip_addresses.add(p.getAddress().getAddress().getHostAddress());
-                
             }
             catch (CantFindPlayerException ex)
             {
@@ -54,16 +73,13 @@ public class Command_glist extends TFM_Command
             String mode = args[0].toLowerCase();
             if (mode.equalsIgnoreCase("ban"))
             {
-                
                 TFM_Util.adminAction(sender.getName(), "Banning " + username + " and IPs: " + StringUtils.join(ip_addresses, ","), true);
-                
-                
 
                 Player p = server.getPlayerExact(username);
                 if (p != null)
                 {
                     TFM_ServerInterface.banUsername(p.getName(), null, null, null);
-                    p.kickPlayer("You have been banned by " + sender.getName() + "\n If you think you have been banned wrongly, appeal here: http://www.thecjgcjg.com/forum");
+                    p.kickPlayer("You have been banned by " + sender.getName() + "\n If you think you have been banned wrongly, appeal here: http://www.totalfreedom.boards.net");
                 }
                 else
                 {

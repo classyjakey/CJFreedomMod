@@ -73,7 +73,7 @@ public class Command_whitelist extends TFM_Command
         // off
         if (args[0].equalsIgnoreCase("off"))
         {
-            TFM_Util.adminAction(sender.getName(), "Turning the whitelist off.", false);
+            TFM_Util.adminAction(sender.getName(), "Turning the whitelist off.", true);
             server.setWhitelist(false);
             return true;
         }
@@ -125,7 +125,7 @@ public class Command_whitelist extends TFM_Command
 
             if (p.isWhitelisted())
             {
-                TFM_Util.adminAction(sender.getName(), "Removing " + p.getName() + " from the whitelist.", true);
+                TFM_Util.adminAction(sender.getName(), "Removing " + p.getName() + " from the whitelist.", false);
                 p.setWhitelisted(false);
                 return true;
             }

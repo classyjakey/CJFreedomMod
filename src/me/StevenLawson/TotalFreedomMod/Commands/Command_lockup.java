@@ -1,15 +1,14 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
-import java.util.Random;
 import me.StevenLawson.TotalFreedomMod.TFM_PlayerData;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-@CommandPermissions(level = AdminLevel.SENIOR, source = SourceType.ONLY_CONSOLE)
+@CommandPermissions(level = AdminLevel.SENIOR, source = SourceType.ONLY_CONSOLE, block_host_console = true)
+@CommandParameters(description = "Block target's minecraft input. This is evil, and I never should have wrote it.", usage = "/<command> <all | purge | <<partialname> on | off>>")
 public class Command_lockup extends TFM_Command
 {
     @Override
@@ -114,19 +113,12 @@ public class Command_lockup extends TFM_Command
 
         playerdata.setLockupScheduleID(server.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable()
         {
-            private Random random = new Random();
-
             @Override
             public void run()
             {
                 if (p.isOnline())
                 {
-                    p.openWorkbench(null, true);
-
-                    Location l = p.getLocation().clone();
-                    l.setPitch(random.nextFloat() * 360.0f);
-                    l.setYaw(random.nextFloat() * 360.0f);
-                    p.teleport(l);
+                    p.openInventory(p.getInventory());
                 }
                 else
                 {

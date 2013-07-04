@@ -35,7 +35,7 @@ public class Command_opall extends TFM_Command
         for (Player p : server.getOnlinePlayers())
         {
             p.setOp(true);
-           // p.sendMessage(TotalFreedomMod.YOU_ARE_OP);
+            p.sendMessage(TotalFreedomMod.YOU_ARE_OP);
 
             if (doSetGamemode)
             {
