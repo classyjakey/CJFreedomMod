@@ -18,7 +18,7 @@ public class TFM_RadarData implements Comparator<TFM_RadarData>
     }
 
     public TFM_RadarData()
-    {
+    {    
     }
 
     @Override
