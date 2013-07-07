@@ -545,6 +545,11 @@ public class TFM_Util
         {
             return "an " + ChatColor.RED + ChatColor.UNDERLINE + "impostor" + ChatColor.RESET + ChatColor.AQUA + "!";
         }
+        
+        if (TFM_DonatorList.isSuperadminImpostor(sender))
+        {
+            return "an " + ChatColor.RED + ChatColor.UNDERLINE + "impostor" + ChatColor.RESET + ChatColor.AQUA + "!";
+        }
 
         TFM_Superadmin admin_entry = TFM_SuperadminList.getAdminEntry(sender.getName());
 
@@ -569,6 +574,33 @@ public class TFM_Util
                 else
                 {
                     return "a " + ChatColor.GOLD + "Super Admin" + ChatColor.AQUA + ".";
+                }
+            }
+        }
+        
+        TFM_Donator donator_entry = TFM_DonatorList.getAdminEntry(sender.getName());
+
+        if (donator_entry != null)
+        {
+            if (donator_entry.isActivated())
+            {
+                String custom_login_message = donator_entry.getCustomLoginMessage();
+
+                if (custom_login_message != null)
+                {
+                    if (!custom_login_message.isEmpty())
+                    {
+                        return ChatColor.translateAlternateColorCodes('&', custom_login_message);
+                    }
+                }
+
+                if (donator_entry.isSeniorAdmin())
+                {
+                    return "a " + ChatColor.LIGHT_PURPLE + "Senior Donator" + ChatColor.AQUA + ".";
+                }
+                else
+                {
+                    return "a " + ChatColor.GOLD + "Super Donator" + ChatColor.AQUA + ".";
                 }
             }
         }
