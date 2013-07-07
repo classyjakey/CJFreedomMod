@@ -20,12 +20,12 @@ public class Command_backup extends TFM_Command
 
         if (senderIsConsole)
         {
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\pluginsz\\BukkitHttpd");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitTelnet");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\Essentials");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\TotalFreedomMod");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\WorldEdit");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\BukkitHttpd");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\BukkitTelnet");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\Essentials");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\TotalFreedomMod");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\WorldEdit");
                         
             //server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Backups");
         }
@@ -38,8 +38,6 @@ public class Command_backup extends TFM_Command
         {
             TFM_Log.severe(ex);
         }
-
-
         return true;
     }
 }
