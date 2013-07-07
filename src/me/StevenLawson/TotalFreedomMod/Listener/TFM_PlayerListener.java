@@ -652,6 +652,37 @@ public class TFM_PlayerListener implements Listener
                     p.setOp(true);
                 }
             }
+            
+            boolean donator_impostor = TFM_DonatorList.isSuperadminImpostor(p);
+
+            if (donator_impostor || TFM_DonatorList.isUserSuperadmin(p))
+            {
+                TFM_Util.bcastMsg(ChatColor.AQUA + p.getName() + " is " + TFM_Util.getRank(p));
+
+                if (donator_impostor)
+                {
+                    p.setOp(false);
+                    p.setGameMode(GameMode.SURVIVAL);
+                    TFM_Util.bcastMsg("Warning: " + p.getName() + " has been flagged as an DONATOR impostor!", ChatColor.RED);
+                }
+                else
+                {
+                    if (TFM_DonatorList.verifyIdentity(p.getName(), p.getAddress().getAddress().getHostAddress()))
+                    {
+                        playerdata.setSuperadminIdVerified(Boolean.TRUE);
+
+                        TFM_DonatorList.updateLastLogin(p);
+                    }
+                    else
+                    {
+                        playerdata.setSuperadminIdVerified(Boolean.FALSE);
+
+                        TFM_Util.bcastMsg("Warning: " + p.getName() + " is an donator, but is using a username not registered to one of their IPs.", ChatColor.RED);
+                    }
+
+                    p.setOp(true);
+                }
+            }
 
             if (TotalFreedomMod.adminOnlyMode)
             {
@@ -681,8 +712,8 @@ public class TFM_PlayerListener implements Listener
     {
         //event.setMotd(ChatColor.translateAlternateColorCodes('&', event.getMotd()));
 
-        event.setMotd(TFM_Util.randomChatColor() + "Total" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY
-                + "-" + TFM_Util.randomChatColor() + " Bukkit v" + TFM_ServerInterface.getVersion());
+        event.setMotd(TFM_Util.randomChatColor() + "CJ" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY
+                + "-" + TFM_Util.randomChatColor() + " CraftBukkit v" + TFM_Util.randomChatColor() + TFM_ServerInterface.getVersion());
 
         if (TFM_ServerInterface.isIPBanned(event.getAddress().getHostAddress()))
         {
