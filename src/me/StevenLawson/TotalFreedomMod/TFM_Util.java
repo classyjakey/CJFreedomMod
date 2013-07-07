@@ -600,7 +600,7 @@ public class TFM_Util
                 }
                 else
                 {
-                    return "a " + ChatColor.GOLD + "Super Donator" + ChatColor.AQUA + ".";
+                    return "a " + ChatColor.GOLD + "Donator" + ChatColor.AQUA + ".";
                 }
             }
         }
