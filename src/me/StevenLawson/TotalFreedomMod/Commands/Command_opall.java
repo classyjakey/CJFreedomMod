@@ -44,6 +44,7 @@ public class Command_opall extends TFM_Command
             {
                 p.setGameMode(targetGamemode);
             }
+        }
         
 
         return true;
