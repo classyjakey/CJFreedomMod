@@ -247,13 +247,13 @@ public class TFM_ServerInterface
 
             if (server.getOnlinePlayers().length >= server.getMaxPlayers())
             {
-                event.disallow(PlayerLoginEvent.Result.KICK_FULL, "Sorry, but this server is full.");
+                event.disallow(PlayerLoginEvent.Result.KICK_FULL, "Sorry, but this server is full, please try another all op server from our forums!.");
                 return;
             }
 
             if (TotalFreedomMod.adminOnlyMode)
             {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Server is temporarily open to admins only.");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Server is temporarily open to admins only, we should be open to everyone soon!.");
                 return;
             }
 
@@ -261,7 +261,7 @@ public class TFM_ServerInterface
             {
                 if (!player_list.getWhitelisted().contains(player_name.toLowerCase()))
                 {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "You are not whitelisted on this server.");
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Sorry, You are not whitelisted on this server.");
                     return;
                 }
             }
@@ -304,7 +304,7 @@ public class TFM_ServerInterface
                 {
                     if (!TFM_SuperadminList.isUserSuperadmin(op))
                     {
-                        op.kickPlayer("You have been kicked to free up space for an admin");
+                        op.kickPlayer("Sorry but you have been kicked to free up space for an admin");
                         return;
                     }
                 }
