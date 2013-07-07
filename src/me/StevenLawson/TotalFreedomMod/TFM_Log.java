@@ -14,7 +14,7 @@ public class TFM_Log
 
     private static void log(Level level, String message, boolean raw)
     {
-        logger.log(level, (raw ? "" : "[" + TotalFreedomMod.pluginName + "]: ") + message);
+        logger.log(level, "{0}{1}", new Object[]{raw ? "" : "[" + TotalFreedomMod.pluginName + "]: ", message});
     }
 
     public static void info(String message)

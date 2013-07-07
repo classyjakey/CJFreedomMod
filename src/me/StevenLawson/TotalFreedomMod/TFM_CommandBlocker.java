@@ -164,8 +164,4 @@ public class TFM_CommandBlocker
         }
 
     }
-
-
-
-
 }
