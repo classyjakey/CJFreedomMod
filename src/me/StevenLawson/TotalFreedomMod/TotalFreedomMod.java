@@ -109,13 +109,9 @@ public class TotalFreedomMod extends JavaPlugin
         // Heartbeat
         server.getScheduler().scheduleSyncRepeatingTask(this, new TFM_Heartbeat(this), HEARTBEAT_RATE * 20L, HEARTBEAT_RATE * 20L);
 
-        // Service uptime checker
-        server.getScheduler().scheduleSyncRepeatingTask(this, TFM_ServiceChecker.checker, SERVICE_CHECKER_RATE * 20L, 5 * 20L);
 
         TFM_CommandLoader.getInstance().scan();
-
-
-
+        
         // metrics @ http://mcstats.org/plugin/TotalFreedomMod
         try
         {
@@ -161,6 +157,10 @@ public class TotalFreedomMod extends JavaPlugin
                         sender.getName(),
                         commandLabel,
                         StringUtils.join(args, " ")), true);
+            }            
+             if ("".equals(commandLabel))
+            {
+                return false;
             }
 
             TFM_Command dispatcher;
@@ -191,7 +191,7 @@ public class TotalFreedomMod extends JavaPlugin
             }
             catch (Throwable ex)
             {
-                sender.sendMessage(ChatColor.RED + "Command Error: " + ex.getMessage());
+                TFM_Log.severe("Command Error: " + commandLabel + "\n" + ExceptionUtils.getStackTrace(ex));
             }
 
             dispatcher = null;
@@ -243,6 +243,7 @@ public class TotalFreedomMod extends JavaPlugin
     public static boolean twitterbotEnabled = false;
     public static String twitterbotUrl = "http://tftwitter.darthcraft.net/";
     public static String twitterbotSecret = "";
+    public static boolean petProtectEnabled = true;
 
     public static void loadMainConfig()
     {
@@ -289,6 +290,7 @@ public class TotalFreedomMod extends JavaPlugin
             twitterbotEnabled = config.getBoolean("twitterbot_enabled", twitterbotEnabled);
             twitterbotUrl = config.getString("twitterbot_url", twitterbotUrl);
             twitterbotSecret = config.getString("twitterbot_secret", twitterbotSecret);
+            petProtectEnabled = config.getBoolean("pet_protect_enabled", petProtectEnabled);
         }
         catch (Exception ex)
         {
