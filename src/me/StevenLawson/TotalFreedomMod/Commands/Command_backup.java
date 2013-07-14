@@ -16,18 +16,18 @@ public class Command_backup extends TFM_Command
     @Override
     public boolean run(CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-        TFM_Util.adminAction(sender.getName(), "Backing up the server - Lag may occur", true);
+        TFM_Util.adminAction(sender.getName(), "Backing up the server - Warning: Lag may occur", true);
 
         if (senderIsConsole)
         {
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\BukkitHttpd");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\BukkitTelnet");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\Essentials");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\TotalFreedomMod");
-            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\uk33.fragnet.net port 25665\\Minecraft\\plugins\\WorldEdit");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitHttpd");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitTelnet");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\Essentials");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\TotalFreedomMod");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\WorldEdit");
                         
-            //server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Backups");
+            //server.dispatchCommand(sender, "ziptool zip E:\UserFiles\CHARLESG\GameServers\TC13664486412628155325358\Backups");
         }
     try
       {
