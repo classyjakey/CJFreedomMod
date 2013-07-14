@@ -66,6 +66,8 @@ public class Command_fr extends TFM_Command
                     TFM_PlayerData playerdata = TFM_PlayerData.getPlayerData(p);
                     playerdata.setFrozen(false);
                 }
+                
+                server.getScheduler().cancelTask(TotalFreedomMod.freezePurgeEventId);
 
                 TFM_Util.adminAction(sender.getName(), "Lifting all global and player freezes", false);
             }
