@@ -141,16 +141,48 @@ public class Command_list extends TFM_Command
                 {
                     prefix = (ChatColor.DARK_AQUA + "[Donator]");
                 }  
-                if (TFM_SuperadminList.isSeniorAdmin(p))
+
+            }    
+            
+            boolean usersradminDonator = TFM_DonatorList.isUserSuperadmin(p);
+
+            if (listFilter == ListFilter.SHOW_DONATORS && !usersradminDonator)
+            {
+                continue;
+            }
+             
+            if (usersradminDonator)
+            {
+                if (TFM_DonatorList.isSeniorAdmin(p) && TFM_SuperadminList.isSeniorAdmin(p))
                 {
-                    prefix = (ChatColor.GREEN + "[SrA + Donator]");
+                    prefix = (ChatColor.LIGHT_PURPLE + "[Sra + Senior Donator]");
                 }
                 else
                 {
-                    prefix = (ChatColor.BLUE + "[SA + Donator]");
-                } 
+                    prefix = (ChatColor.DARK_AQUA + "[Sra + Donator]");
+                }  
 
-            }                
+            } 
+            
+            boolean useradminDonator = TFM_DonatorList.isUserSuperadmin(p);
+
+            if (listFilter == ListFilter.SHOW_DONATORS && !useradminDonator)
+            {
+                continue;
+            }
+             
+            if (useradminDonator)
+            {
+                if (TFM_SuperadminList.isSeniorAdmin(p))
+                {
+                    prefix = (ChatColor.LIGHT_PURPLE + "[Sra + Donator]");
+                }
+                else
+                {
+                    prefix = (ChatColor.DARK_AQUA + "[Sa + Donator]");
+                }  
+
+            } 
                 
 
             player_names.add(prefix + p.getName() + ChatColor.WHITE);
