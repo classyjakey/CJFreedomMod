@@ -15,6 +15,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class TFM_PlayerData
@@ -330,7 +331,7 @@ public class TFM_PlayerData
     public void startArrowShooter(TotalFreedomMod plugin)
     {
         this.stopArrowShooter();
-        this.mp44_schedule_id = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new ArrowShooter(this.player), 1L, 1L);
+        this.mp44_schedule_id = new ArrowShooter(this.player).runTaskTimer(plugin, 1L, 1L);
         mp44_firing = true;
     }
 
@@ -344,7 +345,7 @@ public class TFM_PlayerData
         mp44_firing = false;
     }
 
-    class ArrowShooter implements Runnable
+    private class ArrowShooter extends BukkitRunnable
     {
         private Player _player;
 
@@ -415,7 +416,6 @@ public class TFM_PlayerData
             stopOrbiting();
             setFrozen(true);
             setMuted(true);
-            setHalted(true);
 
             player.sendMessage(ChatColor.GRAY + "You have been halted, don't move!");
         }
@@ -425,11 +425,10 @@ public class TFM_PlayerData
             player.setGameMode(GameMode.CREATIVE);
             setFrozen(false);
             setMuted(false);
-            setHalted(false);
 
             player.sendMessage(ChatColor.GRAY + "You are no longer halted.");
         }
-        
+
     }
 
     public BukkitTask getLockupScheduleID()

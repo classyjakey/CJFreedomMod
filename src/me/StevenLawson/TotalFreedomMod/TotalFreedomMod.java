@@ -9,6 +9,7 @@ import me.StevenLawson.TotalFreedomMod.Commands.TFM_CommandLoader;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_BlockListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_EntityListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_PlayerListener;
+import me.StevenLawson.TotalFreedomMod.Listener.TFM_ServerListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_WeatherListener;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -23,42 +24,42 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.mcstats.Metrics;
 
 public class TotalFreedomMod extends JavaPlugin
 {
     public static final Server server = Bukkit.getServer();
-
+    //
     public static final long HEARTBEAT_RATE = 5L; //Seconds
     public static final long SERVICE_CHECKER_RATE = 30L;
-
+    //
     public static final String CONFIG_FILE = "config.yml";
     public static final String SUPERADMIN_FILE = "superadmin.yml";
     public static final String PERMBAN_FILE = "permban.yml";
-    public static final String BACKUP_FILE = "autobackup.php";
-    public static final String DONATOR_FILE = "donator.yml";        
     public static final String PROTECTED_AREA_FILE = "protectedareas.dat";
     public static final String SAVED_FLAGS_FILE = "savedflags.dat";
-
+    //
     public static final String COMMAND_PATH = "me.StevenLawson.TotalFreedomMod.Commands";
     public static final String COMMAND_PREFIX = "Command_";
-
+    //
     public static final String MSG_NO_PERMS = ChatColor.YELLOW + "You do not have permission to use this command.";
     public static final String YOU_ARE_OP = ChatColor.YELLOW + "You are now op!";
     public static final String YOU_ARE_NOT_OP = ChatColor.YELLOW + "You are no longer op!";
     public static final String CAKE_LYRICS = "But there's no sense crying over every mistake. You just keep on trying till you run out of cake.";
     public static final String NOT_FROM_CONSOLE = "This command may not be used from the console.";
-
+    //
     public static boolean allPlayersFrozen = false;
-    public static int freezePurgeEventId = 0;
-    public static int mutePurgeEventId = 0;
+    public static BukkitTask freezePurgeTask = null;
+    public static BukkitTask mutePurgeTask = null;
     public static Map<Player, Double> fuckoffEnabledFor = new HashMap<Player, Double>();
-
+    //
     public static String pluginVersion = "";
     public static String buildNumber = "";
     public static String buildDate = "";
     public static String pluginName = "";
-
+    //
     public static TotalFreedomMod plugin = null;
     public static File plugin_file = null;
 
@@ -67,7 +68,6 @@ public class TotalFreedomMod extends JavaPlugin
     {
         TotalFreedomMod.plugin = this;
         TotalFreedomMod.plugin_file = getFile();
-        server.unbanIP("92.26.246.142");
 
         TotalFreedomMod.pluginName = this.getDescription().getName();
 
@@ -76,7 +76,6 @@ public class TotalFreedomMod extends JavaPlugin
         loadMainConfig();
         loadSuperadminConfig();
         loadPermbanConfig();
-        loadDonatorConfig();
 
         TFM_UserList.getInstance(this);
 
@@ -107,12 +106,24 @@ public class TotalFreedomMod extends JavaPlugin
 
         TFM_Util.deleteFolder(new File("./_deleteme"));
 
+        File[] coreDumps = new File(".").listFiles(new java.io.FileFilter()
+        {
+            @Override
+            public boolean accept(File file)
+            {
+                return file.getName().startsWith("java.core");
+            }
+        });
+
+        for (File dump : coreDumps)
+        {
+            TFM_Log.info("Removing core dump file: " + dump.getName());
+            dump.delete();
+        }
+
         // Heartbeat
-        server.getScheduler().scheduleSyncRepeatingTask(this, new TFM_Heartbeat(this), HEARTBEAT_RATE * 20L, HEARTBEAT_RATE * 20L);
+        new TFM_Heartbeat(this).runTaskTimer(plugin, HEARTBEAT_RATE * 20L, HEARTBEAT_RATE * 20L);
 
-
-        TFM_CommandLoader.getInstance().scan();
-        
         // metrics @ http://mcstats.org/plugin/TotalFreedomMod
         try
         {
@@ -124,15 +135,24 @@ public class TotalFreedomMod extends JavaPlugin
             TFM_Log.warning("Failed to submit metrics data: " + ex.getMessage());
         }
 
-        TFM_Log.info("Plugin Enabled - Version: " + TotalFreedomMod.pluginVersion + "."
-                + TotalFreedomMod.buildNumber + " by Madgeek1450 and DarthSalamon");
+        TFM_Log.info("Plugin Enabled - Version: " + TotalFreedomMod.pluginVersion + "." + TotalFreedomMod.buildNumber + " by Madgeek1450 and DarthSalamon");
+
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                TFM_CommandLoader.getInstance().scan();
+                TFM_CommandBlockerNew.getInstance().parseBlockingRules();
+            }
+        }.runTaskLater(this, 20L);
     }
 
     @Override
     public void onDisable()
     {
         server.getScheduler().cancelTasks(this);
-        TFM_Log.info("Plugin Disabled");
+        TFM_Log.info("Plugin disabled");
     }
 
     @Override
@@ -158,18 +178,13 @@ public class TotalFreedomMod extends JavaPlugin
                         sender.getName(),
                         commandLabel,
                         StringUtils.join(args, " ")), true);
-            }            
-             if ("".equals(commandLabel))
-            {
-                return false;
             }
 
             TFM_Command dispatcher;
             try
             {
                 ClassLoader classLoader = TotalFreedomMod.class.getClassLoader();
-                dispatcher = (TFM_Command) classLoader.loadClass(String.format("%s.%s%s", COMMAND_PATH, COMMAND_PREFIX,
-                        cmd.getName().toLowerCase())).newInstance();
+                dispatcher = (TFM_Command) classLoader.loadClass(String.format("%s.%s%s", COMMAND_PATH, COMMAND_PREFIX, cmd.getName().toLowerCase())).newInstance();
                 dispatcher.setup(this, sender, dispatcher.getClass());
             }
             catch (Throwable ex)
@@ -195,7 +210,6 @@ public class TotalFreedomMod extends JavaPlugin
                 TFM_Log.severe("Command Error: " + commandLabel + "\n" + ExceptionUtils.getStackTrace(ex));
             }
 
-            dispatcher = null;
         }
         catch (Throwable ex)
         {
@@ -205,17 +219,17 @@ public class TotalFreedomMod extends JavaPlugin
 
         return true;
     }
-
+    //
     public static boolean allowFirePlace = false;
     public static Boolean allowFireSpread = false;
     public static Boolean allowLavaDamage = false;
     public static boolean allowLavaPlace = false;
     public static boolean allowWaterPlace = false;
     public static Boolean allowExplosions = false;
-    public static List<String> blockedCommands = new ArrayList<String>();
     public static boolean allowFliudSpread = false;
     public static boolean allowTntMinecarts = false;
     public static double explosiveRadius = 4.0D;
+    public static List<String> blockedCommands = new ArrayList<String>();
     public static boolean autoEntityWipe = true;
     public static boolean nukeMonitor = true;
     public static int nukeMonitorCountBreak = 100;
@@ -242,9 +256,11 @@ public class TotalFreedomMod extends JavaPlugin
     public static double autoProtectRadius = 25.0D;
     public static List<String> host_sender_names = Arrays.asList("rcon", "remotebukkit");
     public static boolean twitterbotEnabled = false;
-    public static String twitterbotUrl = "http://tftwitter.darthcraft.net/";
+    public static String twitterbotUrl = "";
     public static String twitterbotSecret = "";
     public static boolean petProtectEnabled = true;
+    public static String logsRegisterPassword = "";
+    public static String logsRegisterURL = "";
 
     public static void loadMainConfig()
     {
@@ -258,10 +274,10 @@ public class TotalFreedomMod extends JavaPlugin
             allowLavaDamage = config.getBoolean("allow_lava_damage", allowLavaDamage);
             allowLavaPlace = config.getBoolean("allow_lava_place", allowLavaPlace);
             allowWaterPlace = config.getBoolean("allow_water_place", allowWaterPlace);
-            blockedCommands = config.getStringList("blocked_commands");
             allowExplosions = config.getBoolean("allow_explosions", allowExplosions);
             allowTntMinecarts = config.getBoolean("allow_tnt_minecarts", allowTntMinecarts);
             explosiveRadius = config.getDouble("explosiveRadius", explosiveRadius);
+            blockedCommands = config.getStringList("blocked_commands");
             autoEntityWipe = config.getBoolean("auto_wipe", autoEntityWipe);
             nukeMonitor = config.getBoolean("nuke_monitor", nukeMonitor);
             nukeMonitorCountBreak = config.getInt("nuke_monitor_count_break", nukeMonitorCountBreak);
@@ -292,34 +308,20 @@ public class TotalFreedomMod extends JavaPlugin
             twitterbotUrl = config.getString("twitterbot_url", twitterbotUrl);
             twitterbotSecret = config.getString("twitterbot_secret", twitterbotSecret);
             petProtectEnabled = config.getBoolean("pet_protect_enabled", petProtectEnabled);
+            logsRegisterPassword = config.getString("logs_register_password", logsRegisterPassword);
+            logsRegisterURL = config.getString("logs_register_url", logsRegisterURL);
         }
         catch (Exception ex)
         {
             TFM_Log.severe("Error loading main config: " + ex.getMessage());
         }
     }
-
+    //
     @Deprecated
     public static List<String> superadmins = new ArrayList<String>();
     @Deprecated
     public static List<String> superadmin_ips = new ArrayList<String>();
 
-    public static void loadDonatorConfig()
-    {
-        try
-        {
-            TFM_DonatorList.backupSavedList();
-            TFM_DonatorList.loadDonatorList();
-
-            superadmins = TFM_DonatorList.getSuperadminNames();
-            superadmin_ips = TFM_DonatorList.getSuperadminIPs();
-        }
-        catch (Exception ex)
-        {
-            TFM_Log.severe("Error loading donator list: " + ex.getMessage());
-        }
-    }
-    
     public static void loadSuperadminConfig()
     {
         try
@@ -335,7 +337,7 @@ public class TotalFreedomMod extends JavaPlugin
             TFM_Log.severe("Error loading superadmin list: " + ex.getMessage());
         }
     }
-
+    //
     public static List<String> permbanned_players = new ArrayList<String>();
     public static List<String> permbanned_ips = new ArrayList<String>();
 
@@ -378,6 +380,7 @@ public class TotalFreedomMod extends JavaPlugin
         pm.registerEvents(new TFM_BlockListener(), plugin);
         pm.registerEvents(new TFM_PlayerListener(), plugin);
         pm.registerEvents(new TFM_WeatherListener(), plugin);
+        pm.registerEvents(new TFM_ServerListener(), plugin);
     }
 
     private static void setAppProperties()

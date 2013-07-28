@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import me.StevenLawson.TotalFreedomMod.TFM_Log;
-import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -40,11 +40,9 @@ public class Command_status extends TFM_Command
     @Override
     public boolean run(final CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-        playerMsg(String.format("Total Freedom Mod v%s.%s, built %s.", TotalFreedomMod.pluginVersion, TotalFreedomMod.buildNumber, TotalFreedomMod.buildDate), ChatColor.GOLD);
-        playerMsg("TotalFreedomMod was created by Madgeek1450 and DarthSalamon.", ChatColor.GOLD);
+        playerMsg("For information about TotalFreedomMod, try /tfm", ChatColor.GREEN); // Temporary
 
         playerMsg("Server is currently running with 'online-mode=" + (server.getOnlineMode() ? "true" : "false") + "'.", ChatColor.YELLOW);
-
         playerMsg("Loaded worlds:", ChatColor.BLUE);
         int i = 0;
         for (World world : server.getWorlds())
@@ -52,7 +50,7 @@ public class Command_status extends TFM_Command
             playerMsg(String.format("World %d: %s - %d players.", i++, world.getName(), world.getPlayers().size()), ChatColor.BLUE);
         }
 
-        server.getScheduler().runTaskAsynchronously(plugin, new Runnable()
+        new BukkitRunnable()
         {
             @SuppressWarnings("unchecked")
             @Override
@@ -79,7 +77,7 @@ public class Command_status extends TFM_Command
                         }
                     }
 
-                    List<String> status_output = new ArrayList<String>();
+                    final List<String> status_output = new ArrayList<String>();
 
                     Iterator<Entry<String, Boolean>> output_it = service_status.entrySet().iterator();
                     while (output_it.hasNext())
@@ -96,14 +94,21 @@ public class Command_status extends TFM_Command
                         status_output.add(String.format("%s is %s", service_name, (service_online ? ChatColor.GREEN + "ONLINE" + ChatColor.GRAY : ChatColor.RED + "OFFLINE" + ChatColor.GRAY)));
                     }
 
-                    playerMsg(String.format("Mojang Service Status: %s.", StringUtils.join(status_output, ", ")), ChatColor.GRAY);
+                    new BukkitRunnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            playerMsg(String.format("Mojang Service Status: %s.", StringUtils.join(status_output, ", ")), ChatColor.GRAY);
+                        }
+                    }.runTask(plugin);
                 }
                 catch (Exception ex)
                 {
                     TFM_Log.severe(ex);
                 }
             }
-        });
+        }.runTaskAsynchronously(plugin);
 
         return true;
     }
