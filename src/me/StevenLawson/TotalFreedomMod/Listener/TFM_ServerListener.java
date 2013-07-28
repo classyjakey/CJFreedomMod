@@ -83,7 +83,7 @@ public class TFM_ServerListener implements Listener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerPing(ServerListPingEvent event)
     {
-        event.setMotd(TFM_Util.randomChatColor() + "T=CJ" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY + "-" + TFM_Util.randomChatColor() + " CraftBukkit v" + TFM_ServerInterface.getVersion());
+        event.setMotd(TFM_Util.randomChatColor() + "CJ" + TFM_Util.randomChatColor() + "Freedom " + ChatColor.DARK_GRAY + "-" + TFM_Util.randomChatColor() + " CraftBukkit v" + TFM_ServerInterface.getVersion());
 
         if (TFM_ServerInterface.isIPBanned(event.getAddress().getHostAddress()))
         {
