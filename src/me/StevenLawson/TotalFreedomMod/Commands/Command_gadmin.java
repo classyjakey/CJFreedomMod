@@ -23,7 +23,7 @@ public class Command_gadmin extends TFM_Command
 
         if (mode.equals("list"))
         {
-            playerMsg("[ Real Name ] : [ Display Name ] - Hash:");
+            playerMsg("[ Real Name ] : [ Display Name ]:");
         }
 
         for (Player p : server.getOnlinePlayers())

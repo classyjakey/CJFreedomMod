@@ -86,7 +86,7 @@ public class Command_list extends TFM_Command
                 
                 if (p.getName().equalsIgnoreCase("wild1145"))
                 {
-                    prefix = (ChatColor.DARK_GREEN + "[Chief-Dev]");
+                    prefix = (ChatColor.DARK_GREEN + "[Chief-Developer]");
                 }
                 
                 if (p.getName().equalsIgnoreCase("thecjgcjg"))
@@ -97,6 +97,11 @@ public class Command_list extends TFM_Command
                 if (p.getName().equalsIgnoreCase("Varuct"))
                 {
                     prefix = (ChatColor.DARK_PURPLE + "[Owner]");
+                }
+                
+                 if (p.getName().equalsIgnoreCase("markbyron"))
+                {
+                    prefix = (ChatColor.GREEN + "[TF-Owner]");
                 }
                 
                 if (p.getName().equalsIgnoreCase("phoenix411"))
