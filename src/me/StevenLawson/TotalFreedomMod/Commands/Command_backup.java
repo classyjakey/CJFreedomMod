@@ -19,12 +19,12 @@ public class Command_backup extends TFM_Command
 
         if (senderIsConsole)
         {
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins");
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins\\BukkitHttpd");
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins\\BukkitTelnet");
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins\\Essentials");
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins\\CJFreedomMod");
-            server.dispatchCommand(sender, "ziptool zip home\\mcma\\cjfreedom\\Minecraft\\plugins\\WorldEdit");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitHttpd");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitTelnet");
+          //  server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\Essentials");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\CJFreedomMod");
+            server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\WorldEdit");
                         
             //server.dispatchCommand(sender, "ziptool zip E:\UserFiles\CHARLESG\GameServers\TC13664486412628155325358\Backups");
         }
