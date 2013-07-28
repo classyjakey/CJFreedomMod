@@ -78,6 +78,7 @@ public class TotalFreedomMod extends JavaPlugin
         loadMainConfig();
         loadSuperadminConfig();
         loadPermbanConfig();
+        loadDonatorConfig();
 
         TFM_UserList.getInstance(this);
 
@@ -323,6 +324,22 @@ public class TotalFreedomMod extends JavaPlugin
     public static List<String> superadmins = new ArrayList<String>();
     @Deprecated
     public static List<String> superadmin_ips = new ArrayList<String>();
+    
+    public static void loadDonatorConfig()
+    {
+        try
+        {
+            TFM_DonatorList.backupSavedList();
+            TFM_DonatorList.loadDonatorList();
+
+            superadmins = TFM_DonatorList.getSuperadminNames();
+            superadmin_ips = TFM_DonatorList.getSuperadminIPs();
+        }
+        catch (Exception ex)
+        {
+            TFM_Log.severe("Error loading donator list: " + ex.getMessage());
+        }
+    }
 
     public static void loadSuperadminConfig()
     {
