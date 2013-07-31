@@ -2,13 +2,8 @@
 /nbproject/private/
 /dist/
 /build/
+/Imports/
 manifest.mf
-
-# Eclipse excludes - JeromSar (old)
-.project
-.classpath
-/bin/
-/.settings/
 
 # OS generated files
 .DS_Store
