@@ -86,6 +86,7 @@ public abstract class TFM_Command
 
 
             AdminLevel level = permissions.level();
+           // DoantorLevel level = permissions.level();
             SourceType source = permissions.source();
             boolean block_host_console = permissions.block_host_console();
 
@@ -109,6 +110,14 @@ public abstract class TFM_Command
                 {
                     return false;
                 }
+               /* else if (level == DoantorLevel.STANDARD && !is_srdonator)
+                {
+                    return false;
+                }
+                else if (level == DonatorLevel.DONATOR && !is_srdonator)
+                {
+                    return false;
+                } */
                 else if (block_host_console && TFM_Util.isFromHostConsole(this.commandSender.getName()))
                 {
                     return false;
