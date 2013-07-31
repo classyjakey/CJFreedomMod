@@ -8,7 +8,7 @@ public @interface CommandPermissions
 {
     AdminLevel level();
     
-    //DonatorLevel level();
+   //DonatorLevel level() default DonatorLevel.NONE
 
     SourceType source();
 
