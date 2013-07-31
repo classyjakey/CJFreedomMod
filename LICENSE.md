@@ -10,7 +10,7 @@ We do, however, ask that you comply by several restrictions. These restrictions 
 * Compiled binaries (*.jar's) shall not to be distributed.
   * If you wish to obtain a copy of CJFreedomMod you must compile the original source code or it's derivations yourself.
   * The primary developers, StevenLawson (Madgeek1450) and Jerom van der Sar (DarthSalamon), may choose to provide official binaries on a discretionary basis.
-  * The primary developers of the CJFreedom version of this plugin, Ryan Wild, may choose to provide a official CJFreedom binarie on a discretionary basis.
+  * The primary developers of the CJFreedom version of this plugin, Ryan Wild (Wild1145), may choose to provide a official CJFreedom binarie on a discretionary basis.
 * Any restrictions listed here may be waived by any of the above mentioned primary developers.
 
 Jerom van der Saw has Waived these rights to Wild1145 and only Wild1145
