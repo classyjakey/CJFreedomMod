@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandPermissions(level = AdminLevel.OP, dlevel = DonatorLevel.STANDARD, source = SourceType.BOTH)
+@CommandPermissions(level = AdminLevel.NONE, dlevel = DonatorLevel.STANDARD, source = SourceType.BOTH)
 @CommandParameters(description = "Goto the ender / \"The End\".", usage = "/<command>")
 public class Command_ender extends TFM_Command
 {

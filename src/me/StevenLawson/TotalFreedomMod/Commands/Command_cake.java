@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandPermissions(level = AdminLevel.OP, dlevel =  DonatorLevel.STANDARD, source = SourceType.BOTH)
+@CommandPermissions(level = AdminLevel.NONE, dlevel =  DonatorLevel.STANDARD, source = SourceType.BOTH)
 @CommandParameters(description = "For the people that are still alive.", usage = "/<command>")
 public class Command_cake extends TFM_Command
 {
