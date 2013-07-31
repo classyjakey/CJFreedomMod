@@ -79,7 +79,7 @@ public abstract class TFM_Command
 
 
             AdminLevel level = permissions.level();
-            DonatorLevel dlevel = permissions.level();
+            DonatorLevel dlevel = permissions.dlevel();
             SourceType source = permissions.source();
             boolean block_host_console = permissions.block_host_console();
 
