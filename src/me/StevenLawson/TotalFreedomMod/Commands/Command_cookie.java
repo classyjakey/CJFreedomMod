@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandPermissions(level = AdminLevel.DONATOR, source = SourceType.BOTH)
+@CommandPermissions(level = AdminLevel.OP, dlevel = DonatorLevel.STANDARD, source = SourceType.BOTH)
 @CommandParameters(description = "Give everyone a cookie!", usage = "/<command>")
 public class Command_cookie extends TFM_Command
 {

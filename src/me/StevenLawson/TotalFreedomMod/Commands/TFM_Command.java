@@ -79,7 +79,7 @@ public abstract class TFM_Command
 
 
             AdminLevel level = permissions.level();
-            DonatorLevel level = permissions.level();
+            DonatorLevel dlevel = permissions.level();
             SourceType source = permissions.source();
             boolean block_host_console = permissions.block_host_console();
 
@@ -99,11 +99,11 @@ public abstract class TFM_Command
                 {
                     return false;
                 }
-                else if (level == DonatorLevel.SENIOR && !is_srdonator)
+                else if (dlevel == DonatorLevel.SENIOR && !is_srdonator)
                 {
                     return false;
                 }
-                else if (level == DonatorLevel.STANDARD && !is_Donator)
+                else if (dlevel == DonatorLevel.STANDARD && !is_Donator)
                 {
                     return false;
                 }
