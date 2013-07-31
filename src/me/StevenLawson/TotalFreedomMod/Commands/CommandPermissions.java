@@ -7,6 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 public @interface CommandPermissions
 {
     AdminLevel level();
+    
+    //DonatorLevel level();
 
     SourceType source();
 
