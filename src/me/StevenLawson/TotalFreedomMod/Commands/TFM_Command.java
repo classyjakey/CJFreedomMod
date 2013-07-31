@@ -76,17 +76,10 @@ public abstract class TFM_Command
             {
                 is_srdonator = TFM_DonatorList.isSeniorAdmin(this.commandSender);
             }
-            
-            boolean is_SuperDonator = TFM_DonatorList.isUserSuperadmin(this.commandSender) || TFM_SuperadminList.isUserSuperadmin(this.commandSender);
-            boolean is_supersrdonator = false;
-            if (is_supersrdonator)            
-            {
-                is_supersrdonator = TFM_DonatorList.isSeniorAdmin(this.commandSender);
-            }
 
 
             AdminLevel level = permissions.level();
-           // DoantorLevel dlevel = permissions.level();
+            DonatorLevel dlevel = permissions.level();
             SourceType source = permissions.source();
             boolean block_host_console = permissions.block_host_console();
 
@@ -106,18 +99,14 @@ public abstract class TFM_Command
                 {
                     return false;
                 }
-                else if (level == AdminLevel.SRDONATOR && !is_srdonator)
+                else if (dlevel == DonatorLevel.SENIOR && !is_srdonator)
                 {
                     return false;
                 }
-               /* else if (dlevel == DoantorLevel.STANDARD && !is_srdonator)
+                else if (dlevel == DonatorLevel.STANDARD && !is_Donator)
                 {
                     return false;
                 }
-                else if (dlevel == DonatorLevel.DONATOR && !is_srdonator)
-                {
-                    return false;
-                } */
                 else if (block_host_console && TFM_Util.isFromHostConsole(this.commandSender.getName()))
                 {
                     return false;
@@ -153,15 +142,6 @@ public abstract class TFM_Command
                 {
                     return false;
                 }
-                 else if (level == AdminLevel.DONATOR && !is_Donator)
-                {
-                    return false;
-                }                 
-                  else if (level == AdminLevel.SUPERDONATOR && !is_SuperDonator)
-                {
-                    return false;
-                }
-                        
                 
                 else if (level == AdminLevel.OP && !sender_p.isOp())
                 {
