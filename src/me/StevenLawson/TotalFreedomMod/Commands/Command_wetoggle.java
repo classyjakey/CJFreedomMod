@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-@CommandPermissions(level = AdminLevel.ALL, source = SourceType.BOTH)
+@CommandPermissions(level = AdminLevel.SUPER, source = SourceType.BOTH)
 @CommandParameters(description = "Manages World Edit Access", usage = "/<command>")
 public class Command_wetoggle extends TFM_Command
 {
