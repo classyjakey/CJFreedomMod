@@ -57,12 +57,15 @@ public class Command_fr extends TFM_Command
             if (args[0].toLowerCase().equals("purge"))
             {
                 TotalFreedomMod.allPlayersFrozen = false;
+                if (TotalFreedomMod.freezePurgeTask != null)
+                {
+                    TotalFreedomMod.freezePurgeTask.cancel();
+                }
 
                 for (Player p : server.getOnlinePlayers())
                 {
                     TFM_PlayerData playerdata = TFM_PlayerData.getPlayerData(p);
                     playerdata.setFrozen(false);
-                    TotalFreedomMod.freezePurgeTask.cancel();
                 }
 
                 TFM_Util.adminAction(sender.getName(), "Lifting all global and player freezes", false);

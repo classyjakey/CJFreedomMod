@@ -6,11 +6,7 @@ import java.io.InputStream;
 import java.util.*;
 import me.StevenLawson.TotalFreedomMod.Commands.TFM_Command;
 import me.StevenLawson.TotalFreedomMod.Commands.TFM_CommandLoader;
-import me.StevenLawson.TotalFreedomMod.Listener.TFM_BlockListener;
-import me.StevenLawson.TotalFreedomMod.Listener.TFM_EntityListener;
-import me.StevenLawson.TotalFreedomMod.Listener.TFM_PlayerListener;
-import me.StevenLawson.TotalFreedomMod.Listener.TFM_ServerListener;
-import me.StevenLawson.TotalFreedomMod.Listener.TFM_WeatherListener;
+import me.StevenLawson.TotalFreedomMod.Listener.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
@@ -36,8 +32,6 @@ public class TotalFreedomMod extends JavaPlugin
     public static final long SERVICE_CHECKER_RATE = 30L;
     //
     public static final String CONFIG_FILE = "config.yml";
-    public static final String BACKUP_FILE = "autobackup.php";
-    public static final String DONATOR_FILE = "donator.yml";
     public static final String SUPERADMIN_FILE = "superadmin.yml";
     public static final String PERMBAN_FILE = "permban.yml";
     public static final String PROTECTED_AREA_FILE = "protectedareas.dat";
@@ -78,7 +72,6 @@ public class TotalFreedomMod extends JavaPlugin
         loadMainConfig();
         loadSuperadminConfig();
         loadPermbanConfig();
-        loadDonatorConfig();
 
         TFM_UserList.getInstance(this);
 
@@ -100,6 +93,16 @@ public class TotalFreedomMod extends JavaPlugin
                 world.setThunderDuration(0);
             }
         }
+
+        // Initialize game rules
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.DO_DAYLIGHT_CYCLE, !disableNight, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.DO_FIRE_TICK, allowFireSpread, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.DO_MOB_LOOT, false, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.DO_MOB_SPAWNING, !mobLimiterEnabled, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.DO_TILE_DROPS, false, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.MOB_GRIEFING, false, false);
+        TFM_GameRuleHandler.setGameRule(TFM_GameRuleHandler.TFM_GameRule.NATURAL_REGENERATION, true, false);
+        TFM_GameRuleHandler.commitGameRules();
 
         if (TotalFreedomMod.protectedAreasEnabled)
         {
@@ -224,11 +227,11 @@ public class TotalFreedomMod extends JavaPlugin
     }
     //
     public static boolean allowFirePlace = false;
-    public static Boolean allowFireSpread = false;
-    public static Boolean allowLavaDamage = false;
+    public static boolean allowFireSpread = false;
+    public static boolean allowLavaDamage = false;
     public static boolean allowLavaPlace = false;
     public static boolean allowWaterPlace = false;
-    public static Boolean allowExplosions = false;
+    public static boolean allowExplosions = false;
     public static boolean allowFliudSpread = false;
     public static boolean allowTntMinecarts = false;
     public static double explosiveRadius = 4.0D;
@@ -239,9 +242,9 @@ public class TotalFreedomMod extends JavaPlugin
     public static int nukeMonitorCountPlace = 25;
     public static double nukeMonitorRange = 10.0D;
     public static int freecamTriggerCount = 10;
-    public static Boolean preprocessLogEnabled = true;
-    public static Boolean disableNight = true;
-    public static Boolean disableWeather = true;
+    public static boolean preprocessLogEnabled = true;
+    public static boolean disableNight = true;
+    public static boolean disableWeather = true;
     public static boolean landminesEnabled = false;
     public static boolean mp44Enabled = false;
     public static boolean mobLimiterEnabled = true;
@@ -324,22 +327,6 @@ public class TotalFreedomMod extends JavaPlugin
     public static List<String> superadmins = new ArrayList<String>();
     @Deprecated
     public static List<String> superadmin_ips = new ArrayList<String>();
-    
-    public static void loadDonatorConfig()
-    {
-        try
-        {
-            TFM_DonatorList.backupSavedList();
-            TFM_DonatorList.loadDonatorList();
-
-            superadmins = TFM_DonatorList.getDonatorNames();
-            superadmin_ips = TFM_DonatorList.getDonatorIPs();
-        }
-        catch (Exception ex)
-        {
-            TFM_Log.severe("Error loading donator list: " + ex.getMessage());
-        }
-    }
 
     public static void loadSuperadminConfig()
     {
