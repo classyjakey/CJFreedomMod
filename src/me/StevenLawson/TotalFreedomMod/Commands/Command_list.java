@@ -93,6 +93,10 @@ public class Command_list extends TFM_Command
                 {
                     prefix = (ChatColor.DARK_PURPLE + "[Retired-Owner]");
                 }
+                if (p.getName().equalsIgnoreCase("DarthSalamon"))
+                {
+                    prefix = (ChatColor.DARK_PURPLE + "[System Admin & TFM Guru]");
+                }
                 
                 if (p.getName().equalsIgnoreCase("Varuct"))
                 {
