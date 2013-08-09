@@ -70,19 +70,18 @@ public abstract class TFM_Command
                 is_senior = TFM_SuperadminList.isSeniorAdmin(this.commandSender);
             }
             
-            boolean is_Donator = TFM_DonatorList.isUserSuperadmin(this.commandSender);
+            boolean is_donator = TFM_DonatorList.isUserDonator(this.commandSender);
             boolean is_srdonator = false;
-            if (is_Donator)
+            if (is_donator)
             {
-                is_srdonator = TFM_DonatorList.isSeniorAdmin(this.commandSender);
+                is_srdonator = TFM_DonatorList.isSeniorDonator(this.commandSender);
             }
-
 
             AdminLevel level = permissions.level();
             DonatorLevel dlevel = permissions.dlevel();
             SourceType source = permissions.source();
             boolean block_host_console = permissions.block_host_console();
-
+            
             Player sender_p = null;
             if (this.commandSender instanceof Player)
             {
@@ -95,18 +94,12 @@ public abstract class TFM_Command
                 {
                     return false;
                 }
+                
                 else if (level == AdminLevel.SENIOR && !is_senior)
                 {
                     return false;
                 }
-                else if (dlevel == DonatorLevel.SENIOR && !is_srdonator)
-                {
-                    return false;
-                }
-                else if (dlevel == DonatorLevel.STANDARD && !is_Donator)
-                {
-                    return false;
-                }
+                
                 else if (block_host_console && TFM_Util.isFromHostConsole(this.commandSender.getName()))
                 {
                     return false;
@@ -138,12 +131,23 @@ public abstract class TFM_Command
                         return false;
                     }
                 }
+                
                 else if (level == AdminLevel.SUPER && !is_super)
                 {
                     return false;
                 }
                 
                 else if (level == AdminLevel.OP && !sender_p.isOp())
+                {
+                    return false;
+                }
+                
+                else if (dlevel == DonatorLevel.SENIOR && !is_srdonator)
+                {
+                    return false;
+                }
+                
+                else if (dlevel == DonatorLevel.STANDARD && !is_donator)
                 {
                     return false;
                 }

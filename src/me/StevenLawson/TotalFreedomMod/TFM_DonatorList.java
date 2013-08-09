@@ -9,16 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.addSuperadmin;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.getAdminEntry;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.getAdminEntryByIP;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.getSuperadminIPs;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.isSeniorAdmin;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.isUserSuperadmin;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.removeSuperadmin;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.saveSuperadminList;
-import static me.StevenLawson.TotalFreedomMod.TFM_DonatorList.updateIndexLists;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,10 +19,10 @@ import org.bukkit.util.FileUtil;
 
 public class TFM_DonatorList
 {
-    private static Map<String, TFM_Donator> superadminList = new HashMap<String, TFM_Donator>();
-    private static List<String> superadminNames = new ArrayList<String>();
-    private static List<String> superadminIPs = new ArrayList<String>();
-    private static List<String> seniorAdminNames = new ArrayList<String>();
+    private static Map<String, TFM_Donator> donatorList = new HashMap<String, TFM_Donator>();
+    private static List<String> donatorNames = new ArrayList<String>();
+    private static List<String> donatorIPs = new ArrayList<String>();
+    private static List<String> seniorDonatorNames = new ArrayList<String>();
     private static int clean_threshold_hours = 24 * 7; // 1 Week
 
     private TFM_DonatorList()
@@ -40,40 +30,40 @@ public class TFM_DonatorList
         throw new AssertionError();
     }
 
-    public static List<String> getSuperadminIPs()
+    public static List<String> getDonatorIPs()
     {
-        return superadminIPs;
+        return donatorIPs;
     }
 
-    public static List<String> getSuperadminNames()
+    public static List<String> getDonatorNames()
     {
-        return superadminNames;
+        return donatorNames;
     }
 
     public static void loadDonatorList()
     {
         try
         {
-            superadminList.clear();
+            donatorList.clear();
 
             TFM_Util.createDefaultConfiguration(TotalFreedomMod.DONATOR_FILE, TotalFreedomMod.plugin_file);
             FileConfiguration config = YamlConfiguration.loadConfiguration(new File(TotalFreedomMod.plugin.getDataFolder(), TotalFreedomMod.DONATOR_FILE));
 
             clean_threshold_hours = config.getInt("clean_threshold_hours", clean_threshold_hours);
 
-            if (config.isConfigurationSection("superadmins"))
+            if (config.isConfigurationSection("donators"))
             {
-                ConfigurationSection section = config.getConfigurationSection("superadmins");
+                ConfigurationSection section = config.getConfigurationSection("donators");
 
-                for (String admin_name : section.getKeys(false))
+                for (String donator_name : section.getKeys(false))
                 {
-                    TFM_Donator superadmin = new TFM_Donator(admin_name, section.getConfigurationSection(admin_name));
-                    superadminList.put(admin_name.toLowerCase(), superadmin);
+                    TFM_Donator donator = new TFM_Donator(donator_name, section.getConfigurationSection(donator_name));
+                    donatorList.put(donator_name.toLowerCase(), donator);
                 }
             }
             else
             {
-                TFM_Log.warning("Missing superadmins section in superadmin.yml.");
+                TFM_Log.warning("Missing donators section in donator.yml.");
             }
 
             updateIndexLists();
@@ -93,45 +83,45 @@ public class TFM_DonatorList
 
     public static void updateIndexLists()
     {
-        superadminNames.clear();
-        superadminIPs.clear();
-        seniorAdminNames.clear();
+        donatorNames.clear();
+        donatorIPs.clear();
+        seniorDonatorNames.clear();
 
-        Iterator<Entry<String, TFM_Donator>> it = superadminList.entrySet().iterator();
+        Iterator<Entry<String, TFM_Donator>> it = donatorList.entrySet().iterator();
         while (it.hasNext())
         {
             Entry<String, TFM_Donator> pair = it.next();
 
-            String admin_name = pair.getKey().toLowerCase();
-            TFM_Donator superadmin = pair.getValue();
+            String donator_name = pair.getKey().toLowerCase();
+            TFM_Donator donator = pair.getValue();
 
-            if (superadmin.isActivated())
+            if (donator.isActivated())
             {
-                superadminNames.add(admin_name);
+                donatorNames.add(donator_name);
 
-                for (String ip : superadmin.getIps())
+                for (String ip : donator.getIps())
                 {
-                    superadminIPs.add(ip);
+                    donatorIPs.add(ip);
                 }
 
-                if (superadmin.isSeniorAdmin())
+                if (donator.isSeniorDonator())
                 {
-                    seniorAdminNames.add(admin_name);
+                    seniorDonatorNames.add(donator_name);
 
-                    for (String console_alias : superadmin.getConsoleAliases())
+                    for (String console_alias : donator.getConsoleAliases())
                     {
-                        seniorAdminNames.add(console_alias.toLowerCase());
+                        seniorDonatorNames.add(console_alias.toLowerCase());
                     }
                 }
             }
         }
 
-        superadminNames = TFM_Util.removeDuplicates(superadminNames);
-        superadminIPs = TFM_Util.removeDuplicates(superadminIPs);
-        seniorAdminNames = TFM_Util.removeDuplicates(seniorAdminNames);
+        donatorNames = TFM_Util.removeDuplicates(donatorNames);
+        donatorIPs = TFM_Util.removeDuplicates(donatorIPs);
+        seniorDonatorNames = TFM_Util.removeDuplicates(seniorDonatorNames);
     }
 
-    public static void saveSuperadminList()
+    public static void saveDonatorList()
     {
         try
         {
@@ -141,20 +131,20 @@ public class TFM_DonatorList
 
             config.set("clean_threshold_hours", clean_threshold_hours);
 
-            Iterator<Entry<String, TFM_Donator>> it = superadminList.entrySet().iterator();
+            Iterator<Entry<String, TFM_Donator>> it = donatorList.entrySet().iterator();
             while (it.hasNext())
             {
                 Entry<String, TFM_Donator> pair = it.next();
 
-                String admin_name = pair.getKey().toLowerCase();
-                TFM_Donator superadmin = pair.getValue();
+                String donator_name = pair.getKey().toLowerCase();
+                TFM_Donator donator = pair.getValue();
 
-                config.set("superadmins." + admin_name + ".ips", TFM_Util.removeDuplicates(superadmin.getIps()));
-                config.set("superadmins." + admin_name + ".last_login", TFM_Util.dateToString(superadmin.getLastLogin()));
-                config.set("superadmins." + admin_name + ".custom_login_message", superadmin.getCustomLoginMessage());
-                config.set("superadmins." + admin_name + ".is_senior_admin", superadmin.isSeniorAdmin());
-                config.set("superadmins." + admin_name + ".console_aliases", TFM_Util.removeDuplicates(superadmin.getConsoleAliases()));
-                config.set("superadmins." + admin_name + ".is_activated", superadmin.isActivated());
+                config.set("donators." + donator_name + ".ips", TFM_Util.removeDuplicates(donator.getIps()));
+                config.set("donators." + donator_name + ".last_login", TFM_Util.dateToString(donator.getLastLogin()));
+                config.set("donators." + donator_name + ".custom_login_message", donator.getCustomLoginMessage());
+                config.set("donators." + donator_name + ".is_senior_donator", donator.isSeniorDonator());
+                config.set("donators." + donator_name + ".console_aliases", TFM_Util.removeDuplicates(donator.getConsoleAliases()));
+                config.set("donators." + donator_name + ".is_activated", donator.isActivated());
             }
 
             config.save(new File(TotalFreedomMod.plugin.getDataFolder(), TotalFreedomMod.DONATOR_FILE));
@@ -165,13 +155,13 @@ public class TFM_DonatorList
         }
     }
 
-    public static TFM_Donator getAdminEntry(String admin_name)
+    public static TFM_Donator getDonatorEntry(String donator_name)
     {
-        admin_name = admin_name.toLowerCase();
+        donator_name = donator_name.toLowerCase();
 
-        if (superadminList.containsKey(admin_name))
+        if (donatorList.containsKey(donator_name))
         {
-            return superadminList.get(admin_name);
+            return donatorList.get(donator_name);
         }
         else
         {
@@ -179,21 +169,21 @@ public class TFM_DonatorList
         }
     }
 
-    public static TFM_Donator getAdminEntry(Player p)
+    public static TFM_Donator getDonatorEntry(Player p)
     {
-        return getAdminEntry(p.getName().toLowerCase());
+        return getDonatorEntry(p.getName().toLowerCase());
     }
 
-    public static TFM_Donator getAdminEntryByIP(String ip)
+    public static TFM_Donator getDonatorEntryByIP(String ip)
     {
-        Iterator<Entry<String, TFM_Donator>> it = superadminList.entrySet().iterator();
+        Iterator<Entry<String, TFM_Donator>> it = donatorList.entrySet().iterator();
         while (it.hasNext())
         {
             Entry<String, TFM_Donator> pair = it.next();
-            TFM_Donator superadmin = pair.getValue();
-            if (superadmin.getIps().contains(ip))
+            TFM_Donator donator = pair.getValue();
+            if (donator.getIps().contains(ip))
             {
-                return superadmin;
+                return donator;
             }
         }
         return null;
@@ -201,24 +191,24 @@ public class TFM_DonatorList
 
     public static void updateLastLogin(Player p)
     {
-        TFM_Donator admin_entry = getAdminEntry(p);
-        if (admin_entry != null)
+        TFM_Donator donator_entry = getDonatorEntry(p);
+        if (donator_entry != null)
         {
-            admin_entry.setLastLogin(new Date());
-            saveSuperadminList();
+            donator_entry.setLastLogin(new Date());
+            saveDonatorList();
         }
     }
 
-    public static boolean isSeniorAdmin(CommandSender user)
+    public static boolean isSeniorDonator(CommandSender user)
     {
-        return isSeniorAdmin(user, false);
+        return isSeniorDonator(user, false);
     }
 
-    public static boolean isSeniorAdmin(CommandSender user, boolean verify_is_superadmin)
+    public static boolean isSeniorDonator(CommandSender user, boolean verify_is_donator)
     {
-        if (verify_is_superadmin)
+        if (verify_is_donator)
         {
-            if (!isUserSuperadmin(user))
+            if (!isUserDonator(user))
             {
                 return false;
             }
@@ -228,19 +218,19 @@ public class TFM_DonatorList
 
         if (!(user instanceof Player))
         {
-            return seniorAdminNames.contains(user_name);
+            return seniorDonatorNames.contains(user_name);
         }
 
-        TFM_Donator admin_entry = getAdminEntry((Player) user);
-        if (admin_entry != null)
+        TFM_Donator donator_entry = getDonatorEntry((Player) user);
+        if (donator_entry != null)
         {
-            return admin_entry.isSeniorAdmin();
+            return donator_entry.isSeniorDonator();
         }
 
         return false;
     }
 
-    public static boolean isUserSuperadmin(CommandSender user)
+    public static boolean isUserDonator(CommandSender user)
     {
         if (!(user instanceof Player))
         {
@@ -249,7 +239,7 @@ public class TFM_DonatorList
 
         if (Bukkit.getOnlineMode())
         {
-            if (superadminNames.contains(user.getName().toLowerCase()))
+            if (donatorNames.contains(user.getName().toLowerCase()))
             {
                 return true;
             }
@@ -260,7 +250,7 @@ public class TFM_DonatorList
             String user_ip = ((Player) user).getAddress().getAddress().getHostAddress();
             if (user_ip != null && !user_ip.isEmpty())
             {
-                if (superadminIPs.contains(user_ip))
+                if (donatorIPs.contains(user_ip))
                 {
                     return true;
                 }
@@ -274,20 +264,20 @@ public class TFM_DonatorList
         return false;
     }
 
-    public static boolean checkPartialSuperadminIP(String user_ip, String user_name)
+    public static boolean checkPartialdonatorIP(String user_ip, String user_name)
     {
         try
         {
             user_ip = user_ip.trim();
 
-            if (superadminIPs.contains(user_ip))
+            if (donatorIPs.contains(user_ip))
             {
                 return true;
             }
             else
             {
                 String match_ip = null;
-                for (String test_ip : getSuperadminIPs())
+                for (String test_ip : getDonatorIPs())
                 {
                     if (TFM_Util.fuzzyIpMatch(user_ip, test_ip, 3))
                     {
@@ -298,16 +288,16 @@ public class TFM_DonatorList
 
                 if (match_ip != null)
                 {
-                    TFM_Donator admin_entry = getAdminEntryByIP(match_ip);
+                    TFM_Donator donator_entry = getDonatorEntryByIP(match_ip);
 
-                    if (admin_entry != null)
+                    if (donator_entry != null)
                     {
-                        if (admin_entry.getName().equalsIgnoreCase(user_name))
+                        if (donator_entry.getName().equalsIgnoreCase(user_name))
                         {
-                            List<String> ips = admin_entry.getIps();
+                            List<String> ips = donator_entry.getIps();
                             ips.add(user_ip);
-                            admin_entry.setIps(ips);
-                            saveSuperadminList();
+                            donator_entry.setIps(ips);
+                            saveDonatorList();
                         }
                     }
 
@@ -323,7 +313,7 @@ public class TFM_DonatorList
         return false;
     }
 
-    public static boolean isSuperadminImpostor(CommandSender user)
+    public static boolean isDonatorImpostor(CommandSender user)
     {
         if (!(user instanceof Player))
         {
@@ -332,39 +322,39 @@ public class TFM_DonatorList
 
         Player p = (Player) user;
 
-        if (superadminNames.contains(p.getName().toLowerCase()))
+        if (donatorNames.contains(p.getName().toLowerCase()))
         {
-            return !isUserSuperadmin(p);
+            return !isUserDonator(p);
         }
 
         return false;
     }
 
-    public static void addSuperadmin(String admin_name, List<String> ips)
+    public static void addDonator(String donator_name, List<String> ips)
     {
         try
         {
-            admin_name = admin_name.toLowerCase();
+            donator_name = donator_name.toLowerCase();
 
-            if (superadminList.containsKey(admin_name))
+            if (donatorList.containsKey(donator_name))
             {
-                TFM_Donator superadmin = superadminList.get(admin_name);
-                superadmin.setActivated(true);
-                superadmin.getIps().addAll(ips);
-                superadmin.setLastLogin(new Date());
+                TFM_Donator donator = donatorList.get(donator_name);
+                donator.setActivated(true);
+                donator.getIps().addAll(ips);
+                donator.setLastLogin(new Date());
             }
             else
             {
                 Date last_login = new Date();
                 String custom_login_message = "";
-                boolean is_senior_admin = false;
+                boolean is_senior_donator = false;
                 List<String> console_aliases = new ArrayList<String>();
 
-                TFM_Donator superadmin = new TFM_Donator(admin_name, ips, last_login, custom_login_message, is_senior_admin, console_aliases, true);
-                superadminList.put(admin_name.toLowerCase(), superadmin);
+                TFM_Donator donator = new TFM_Donator(donator_name, ips, last_login, custom_login_message, is_senior_donator, console_aliases, true);
+                donatorList.put(donator_name.toLowerCase(), donator);
             }
 
-            saveSuperadminList();
+            saveDonatorList();
         }
         catch (Exception ex)
         {
@@ -372,30 +362,30 @@ public class TFM_DonatorList
         }
     }
 
-    public static void addSuperadmin(Player p)
+    public static void addDonator(Player p)
     {
-        String admin_name = p.getName().toLowerCase();
+        String donator_name = p.getName().toLowerCase();
         List<String> ips = Arrays.asList(p.getAddress().getAddress().getHostAddress());
 
-        addSuperadmin(admin_name, ips);
+        addDonator(donator_name, ips);
     }
 
-    public static void addSuperadmin(String admin_name)
+    public static void addDonator(String donator_name)
     {
-        addSuperadmin(admin_name, new ArrayList<String>());
+        addDonator(donator_name, new ArrayList<String>());
     }
 
-    public static void removeSuperadmin(String admin_name)
+    public static void removeDonator(String donator_name)
     {
         try
         {
-            admin_name = admin_name.toLowerCase();
+            donator_name = donator_name.toLowerCase();
 
-            if (superadminList.containsKey(admin_name))
+            if (donatorList.containsKey(donator_name))
             {
-                TFM_Donator superadmin = superadminList.get(admin_name);
-                superadmin.setActivated(false);
-                saveSuperadminList();
+                TFM_Donator donator = donatorList.get(donator_name);
+                donator.setActivated(false);
+                saveDonatorList();
             }
         }
         catch (Exception ex)
@@ -404,56 +394,22 @@ public class TFM_DonatorList
         }
     }
 
-    public static void removeSuperadmin(Player p)
+    public static void removeDonator(Player p)
     {
-        removeSuperadmin(p.getName());
+        removeDonator(p.getName());
     }
 
-    public static void cleanSuperadminList(boolean verbose)
-    {
-        try
-        {
-            Iterator<Entry<String, TFM_Donator>> it = superadminList.entrySet().iterator();
-            while (it.hasNext())
-            {
-                Entry<String, TFM_Donator> pair = it.next();
-                TFM_Donator superadmin = pair.getValue();
-                if (superadmin.isActivated() && !superadmin.isSeniorAdmin())
-                {
-                    Date last_login = superadmin.getLastLogin();
-
-                    long hours_since_login = TimeUnit.HOURS.convert(new Date().getTime() - last_login.getTime(), TimeUnit.MILLISECONDS);
-
-                    if (hours_since_login > clean_threshold_hours)
-                    {
-                        if (verbose)
-                        {
-                            TFM_Util.adminAction("TotalFreedomSystem", "Deactivating superadmin \"" + superadmin.getName() + "\", inactive for " + hours_since_login + " hours.", true);
-                        }
-
-                        superadmin.setActivated(false);
-                    }
-                }
-            }
-            saveSuperadminList();
-        }
-        catch (Exception ex)
-        {
-            TFM_Log.severe(ex);
-        }
-    }
-
-    public static boolean verifyIdentity(String admin_name, String ip) throws Exception
+    public static boolean verifyIdentity(String donator_name, String ip) throws Exception
     {
         if (Bukkit.getOnlineMode())
         {
             return true;
         }
 
-        TFM_Donator admin_entry = getAdminEntry(admin_name);
-        if (admin_entry != null)
+        TFM_Donator donator_entry = getDonatorEntry(donator_name);
+        if (donator_entry != null)
         {
-            return admin_entry.getIps().contains(ip);
+            return donator_entry.getIps().contains(ip);
         }
         else
         {

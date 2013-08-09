@@ -42,7 +42,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.RemoteServerCommandEvent;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -654,11 +653,14 @@ public class TFM_PlayerListener implements Listener
                 }
             }
             
-            boolean donator_impostor = TFM_DonatorList.isSuperadminImpostor(p);
+            boolean donator_impostor = TFM_DonatorList.isDonatorImpostor(p);
 
-            if (donator_impostor || TFM_DonatorList.isUserSuperadmin(p))
+            if (donator_impostor || TFM_DonatorList.isUserDonator(p))
             {
-                TFM_Util.bcastMsg(ChatColor.AQUA + p.getName() + " is " + TFM_Util.getRank(p));
+                if (!(superadmin_impostor || TFM_SuperadminList.isUserSuperadmin(p)))
+                {
+                    TFM_Util.bcastMsg(ChatColor.AQUA + p.getName() + " is " + TFM_Util.getRank(p));
+                }
 
                 if (donator_impostor)
                 {

@@ -332,8 +332,8 @@ public class TotalFreedomMod extends JavaPlugin
             TFM_DonatorList.backupSavedList();
             TFM_DonatorList.loadDonatorList();
 
-            superadmins = TFM_DonatorList.getSuperadminNames();
-            superadmin_ips = TFM_DonatorList.getSuperadminIPs();
+            superadmins = TFM_DonatorList.getDonatorNames();
+            superadmin_ips = TFM_DonatorList.getDonatorIPs();
         }
         catch (Exception ex)
         {

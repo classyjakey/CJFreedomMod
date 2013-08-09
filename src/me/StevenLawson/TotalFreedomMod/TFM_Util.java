@@ -546,7 +546,7 @@ public class TFM_Util
             return "an " + ChatColor.RED + ChatColor.UNDERLINE + "impostor" + ChatColor.RESET + ChatColor.AQUA + "!";
         }
         
-        if (TFM_DonatorList.isSuperadminImpostor(sender))
+        if (TFM_DonatorList.isDonatorImpostor(sender))
         {
             return "an " + ChatColor.RED + ChatColor.UNDERLINE + "impostor" + ChatColor.RESET + ChatColor.AQUA + "!";
         }
@@ -578,7 +578,7 @@ public class TFM_Util
             }
         }
         
-        TFM_Donator donator_entry = TFM_DonatorList.getAdminEntry(sender.getName());
+        TFM_Donator donator_entry = TFM_DonatorList.getDonatorEntry(sender.getName());
 
         if (donator_entry != null)
         {
@@ -594,7 +594,7 @@ public class TFM_Util
                     }
                 }
 
-                if (donator_entry.isSeniorAdmin())
+                if (donator_entry.isSeniorDonator())
                 {
                     return "a " + ChatColor.LIGHT_PURPLE + "Senior Donator" + ChatColor.AQUA + ".";
                 }

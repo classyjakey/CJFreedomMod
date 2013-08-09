@@ -129,7 +129,7 @@ public class Command_list extends TFM_Command
                 }
             }          
             
-             boolean userDonator = TFM_DonatorList.isUserSuperadmin(p);
+             boolean userDonator = TFM_DonatorList.isUserDonator(p);
 
             if (listFilter == ListFilter.SHOW_DONATORS && !userDonator)
             {
@@ -138,7 +138,7 @@ public class Command_list extends TFM_Command
              
             if (userDonator)
             {
-                if (TFM_DonatorList.isSeniorAdmin(p))
+                if (TFM_DonatorList.isSeniorDonator(p))
                 {
                     prefix = (ChatColor.LIGHT_PURPLE + "[Senior-Donator]");
                 }
@@ -149,7 +149,7 @@ public class Command_list extends TFM_Command
 
             }    
             
-            boolean usersradminDonator = TFM_DonatorList.isUserSuperadmin(p);
+            boolean usersradminDonator = TFM_DonatorList.isUserDonator(p);
 
             if (listFilter == ListFilter.SHOW_DONATORS && !usersradminDonator)
             {
@@ -158,7 +158,7 @@ public class Command_list extends TFM_Command
              
             if (usersradminDonator)
             {
-                if (TFM_DonatorList.isSeniorAdmin(p) && TFM_SuperadminList.isSeniorAdmin(p))
+                if (TFM_DonatorList.isSeniorDonator(p) && TFM_SuperadminList.isSeniorAdmin(p))
                 {
                     prefix = (ChatColor.LIGHT_PURPLE + "[Sra + Senior Donator]");
                 }
@@ -169,7 +169,7 @@ public class Command_list extends TFM_Command
 
             } 
             
-            boolean useradminDonator = TFM_DonatorList.isUserSuperadmin(p);
+            boolean useradminDonator = TFM_DonatorList.isUserDonator(p);
 
             if (listFilter == ListFilter.SHOW_DONATORS && !useradminDonator)
             {

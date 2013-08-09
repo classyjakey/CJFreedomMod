@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 
 @CommandPermissions(level = AdminLevel.OP, source = SourceType.BOTH)
-@CommandParameters(description = "Manage donators.", usage = "/<command> <list | clean | <add|delete|info> <username>>")
+@CommandParameters(description = "Manage donators.", usage = "/<command> <list | <add|delete|info> <username>>")
 public class Command_donator extends TFM_Command
 {
     @Override
@@ -22,7 +22,7 @@ public class Command_donator extends TFM_Command
         {
             if (args[0].equals("list"))
             {
-                playerMsg("Donators: " + StringUtils.join(TFM_DonatorList.getSuperadminNames(), ", "), ChatColor.GOLD);
+                playerMsg("Donators: " + StringUtils.join(TFM_DonatorList.getDonatorNames(), ", "), ChatColor.GOLD);
             }
             else
             {
@@ -31,19 +31,10 @@ public class Command_donator extends TFM_Command
                     playerMsg("This command may only be used from the console.");
                     return true;
                 }
-
-                if (args[0].equals("clean"))
-                {
-                    TFM_Util.adminAction(sender.getName(), "Cleaning donator list.", true);
-                    TFM_DonatorList.cleanSuperadminList(true);
-                    playerMsg("Donators: " + StringUtils.join(TFM_DonatorList.getSuperadminNames(), ", "), ChatColor.YELLOW);
-                }
                 else
                 {
                     return false;
                 }
-
-                return true;
             }
 
             return true;
@@ -52,19 +43,19 @@ public class Command_donator extends TFM_Command
         {
             if (args[0].equalsIgnoreCase("info"))
             {
-                if (!TFM_DonatorList.isUserSuperadmin(sender))
+                if (!TFM_DonatorList.isUserDonator(sender))
                 {
                     playerMsg(TotalFreedomMod.MSG_NO_PERMS);
                     return true;
                 }
 
-                TFM_Donator donator = TFM_DonatorList.getAdminEntry(args[1].toLowerCase());
+                TFM_Donator donator = TFM_DonatorList.getDonatorEntry(args[1].toLowerCase());
 
                 if (donator == null)
                 {
                     try
                     {
-                        donator = TFM_DonatorList.getAdminEntry(getPlayer(args[1]).getName().toLowerCase());
+                        donator = TFM_DonatorList.getDonatorEntry(getPlayer(args[1]).getName().toLowerCase());
                     }
                     catch (CantFindPlayerException ex)
                     {
@@ -106,7 +97,7 @@ public class Command_donator extends TFM_Command
                 }
                 catch (CantFindPlayerException ex)
                 {
-                    TFM_Donator donator = TFM_DonatorList.getAdminEntry(args[1].toLowerCase());
+                    TFM_Donator donator = TFM_DonatorList.getDonatorEntry(args[1].toLowerCase());
                     if (donator != null)
                     {
                         donator_name = donator.getName();
@@ -121,12 +112,12 @@ public class Command_donator extends TFM_Command
                 if (p != null)
                 {
                     TFM_Util.adminAction(sender.getName(), "Adding " + p.getName() + " to the donators list.", true);
-                    TFM_DonatorList.addSuperadmin(p);
+                    TFM_DonatorList.addDonator(p);
                 }
                 else if (donator_name != null)
                 {
                     TFM_Util.adminAction(sender.getName(), "Adding " + donator_name + " to the donators list.", true);
-                    TFM_DonatorList.addSuperadmin(donator_name);
+                    TFM_DonatorList.addDonator(donator_name);
                 }
             }
             else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("remove"))
@@ -147,14 +138,14 @@ public class Command_donator extends TFM_Command
                 {
                 }
 
-                if (!TFM_DonatorList.getSuperadminNames().contains(target_name.toLowerCase()))
+                if (!TFM_DonatorList.getDonatorNames().contains(target_name.toLowerCase()))
                 {
                     playerMsg("Donator not found: " + target_name);
                     return true;
                 }
 
                 TFM_Util.adminAction(sender.getName(), "Removing " + target_name + " from the donator list", true);
-                TFM_DonatorList.removeSuperadmin(target_name);
+                TFM_DonatorList.removeDonator(target_name);
             }
             else
             {

@@ -9,19 +9,19 @@ public class TFM_Donator
 {
     private final String name;
     private final String custom_login_message;
-    private final boolean is_senior_admin;
+    private final boolean is_senior_donator;
     private final List<String> console_aliases;
     private List<String> ips;
     private Date last_login;
     private boolean is_activated;
 
-    public TFM_Donator(String name, List<String> ips, Date last_login, String custom_login_message, boolean is_senior_admin, List<String> console_aliases, boolean is_activated)
+    public TFM_Donator(String name, List<String> ips, Date last_login, String custom_login_message, boolean is_senior_donator, List<String> console_aliases, boolean is_activated)
     {
         this.name = name.toLowerCase();
         this.ips = ips;
         this.last_login = last_login;
         this.custom_login_message = custom_login_message;
-        this.is_senior_admin = is_senior_admin;
+        this.is_senior_donator = is_senior_donator;
         this.console_aliases = console_aliases;
         this.is_activated = is_activated;
     }
@@ -32,7 +32,7 @@ public class TFM_Donator
         this.ips = section.getStringList("ips");
         this.last_login = TFM_Util.stringToDate(section.getString("last_login", TFM_Util.dateToString(new Date(0L))));
         this.custom_login_message = section.getString("custom_login_message", "");
-        this.is_senior_admin = section.getBoolean("is_senior_admin", false);
+        this.is_senior_donator = section.getBoolean("is_senior_donator", false);
         this.console_aliases = section.getStringList("console_aliases");
         this.is_activated = section.getBoolean("is_activated", true);
     }
@@ -48,7 +48,7 @@ public class TFM_Donator
             output.append("- IPs: ").append(StringUtils.join(this.ips, ", ")).append("\n");
             output.append("- Last Login: ").append(TFM_Util.dateToString(this.last_login)).append("\n");
             output.append("- Custom Login Message: ").append(this.custom_login_message).append("\n");
-            output.append("- Is Senior Admin: ").append(this.is_senior_admin).append("\n");
+            output.append("- Is Senior Donator: ").append(this.is_senior_donator).append("\n");
             output.append("- Console Aliases: ").append(StringUtils.join(this.console_aliases, ", ")).append("\n");
             output.append("- Is Activated: ").append(this.is_activated);
         }
@@ -80,9 +80,9 @@ public class TFM_Donator
         return custom_login_message;
     }
 
-    public boolean isSeniorAdmin()
+    public boolean isSeniorDonator()
     {
-        return is_senior_admin;
+        return is_senior_donator;
     }
 
     public List<String> getConsoleAliases()
