@@ -70,6 +70,7 @@ public class TFM_PlayerListener implements Listener
                             event.setCancelled(true);
                             return;
                         }
+                        break;
                     }
                     case LAVA_BUCKET:
                     {
@@ -80,6 +81,7 @@ public class TFM_PlayerListener implements Listener
                             event.setCancelled(true);
                             return;
                         }
+                        break;
                     }
                     case EXPLOSIVE_MINECART:
                     {
@@ -90,6 +92,7 @@ public class TFM_PlayerListener implements Listener
                             event.setCancelled(true);
                         }
                     }
+                        break;
 
                 }
                 break;
