@@ -22,11 +22,8 @@ public class Command_backup extends TFM_Command
             server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins");
             server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitHttpd");
             server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\BukkitTelnet");
-          //  server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\Essentials");
             server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\CJFreedomMod");
             server.dispatchCommand(sender, "ziptool zip E:\\UserFiles\\CHARLESG\\GameServers\\TC13664486412628155325358\\Minecraft\\plugins\\WorldEdit");
-                        
-            //server.dispatchCommand(sender, "ziptool zip E:\UserFiles\CHARLESG\GameServers\TC13664486412628155325358\Backups");
         }
     try
       {
