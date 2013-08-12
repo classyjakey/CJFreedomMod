@@ -20,13 +20,15 @@ import com.earth2me.essentials.commands.EssentialsCommand;
 import com.earth2me.essentials.commands.NotEnoughArgumentsException;
 import org.bukkit.command.Command;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
-import com.earth2me.essentials.Essentials;
+import me.StevenLawson.TotalFreedomMod.CJFM_Essentials;
+
+@CommandPermissions(level = AdminLevel.ALL, dlevel = DonatorLevel.STANDARD, source = SourceType.BOTH)
+@CommandParameters(description = "For the people that are still alive.", usage = "/<command>")
 
 public class Command_whois extends TFM_Command
 {
-    
- 
-    public void run(Server server, CommandSender sender, String commandLabel, String[] args)
+    @Override 
+    public boolean run(Server server, CommandSender sender, String commandLabel, String[] args)
             throws Exception
     {
         if (args.length < 1)
@@ -128,12 +130,6 @@ public class Command_whois extends TFM_Command
         {
             throw new NoSuchFieldException(I18n._("playerNotFound", new Object[0]));
         }
-    }
-
-    @Override
-    public boolean run(CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
