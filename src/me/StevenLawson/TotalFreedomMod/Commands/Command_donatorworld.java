@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.ALL, dlevel = DonatorLevel.STANDARD, source = SourceType.ONLY_IN_GAME)
-@CommandParameters(description = "Go to the AdminWorld.", usage = "/<command>")
+@CommandParameters(description = "Go to the DonatorWorld.", usage = "/<command>")
 public class Command_donatorworld extends TFM_Command
 {
     @Override
