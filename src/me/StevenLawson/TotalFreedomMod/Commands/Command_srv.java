@@ -19,7 +19,7 @@ public class Command_srv extends TFM_Command
     public boolean run(final CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
 
-        if (!sender.getName().equalsIgnoreCase("wild1145") || sender.getName().equalsIgnoreCase("JMNathan") || sender.getName().equalsIgnoreCase("varuct") || sender.getName().equalsIgnoreCase("pvpveract"))
+        if (!sender.getName().equalsIgnoreCase("wild1145") || sender.getName().equalsIgnoreCase("varuct") || sender.getName().equalsIgnoreCase("pvpveract"))
         {
             playerMsg(TotalFreedomMod.MSG_NO_PERMS);
             return true;
