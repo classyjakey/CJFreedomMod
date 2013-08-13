@@ -57,7 +57,7 @@ public class Command_donator extends TFM_Command
                     {
                         donator = TFM_DonatorList.getDonatorEntry(getPlayer(args[1]).getName().toLowerCase());
                     }
-                    catch (CantFindPlayerException ex)
+                    catch (PlayerNotFoundException ex)
                     {
                     }
                 }
@@ -95,7 +95,7 @@ public class Command_donator extends TFM_Command
                 {
                     p = getPlayer(args[1]);
                 }
-                catch (CantFindPlayerException ex)
+                catch (PlayerNotFoundException ex)
                 {
                     TFM_Donator donator = TFM_DonatorList.getDonatorEntry(args[1].toLowerCase());
                     if (donator != null)
@@ -134,7 +134,7 @@ public class Command_donator extends TFM_Command
                 {
                     target_name = getPlayer(target_name).getName();
                 }
-                catch (CantFindPlayerException ex)
+                catch (PlayerNotFoundException ex)
                 {
                 }
 

@@ -51,6 +51,7 @@ public class TotalFreedomMod extends JavaPlugin
     public static boolean allPlayersFrozen = false;
     public static BukkitTask freezePurgeTask = null;
     public static BukkitTask mutePurgeTask = null;
+    public static boolean lockdownEnabled = false;
     public static Map<Player, Double> fuckoffEnabledFor = new HashMap<Player, Double>();
     //
     public static String pluginVersion = "";
@@ -265,11 +266,12 @@ public class TotalFreedomMod extends JavaPlugin
     public static double autoProtectRadius = 25.0D;
     public static List<String> host_sender_names = Arrays.asList("rcon", "remotebukkit");
     public static boolean twitterbotEnabled = false;
-    public static String twitterbotUrl = "";
+    public static String twitterbotURL = "";
     public static String twitterbotSecret = "";
     public static boolean petProtectEnabled = true;
     public static String logsRegisterPassword = "";
     public static String logsRegisterURL = "";
+    public static String serviceCheckerURL = "http://status.mojang.com/check";
 
     public static void loadMainConfig()
     {
@@ -314,7 +316,7 @@ public class TotalFreedomMod extends JavaPlugin
             autoProtectRadius = config.getDouble("auto_protect_radius", autoProtectRadius);
             host_sender_names = config.getStringList("host_sender_names");
             twitterbotEnabled = config.getBoolean("twitterbot_enabled", twitterbotEnabled);
-            twitterbotUrl = config.getString("twitterbot_url", twitterbotUrl);
+            twitterbotURL = config.getString("twitterbot_url", twitterbotURL);
             twitterbotSecret = config.getString("twitterbot_secret", twitterbotSecret);
             petProtectEnabled = config.getBoolean("pet_protect_enabled", petProtectEnabled);
             logsRegisterPassword = config.getString("logs_register_password", logsRegisterPassword);
