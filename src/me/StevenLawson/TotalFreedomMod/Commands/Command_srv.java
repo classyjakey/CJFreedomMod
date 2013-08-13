@@ -1,5 +1,6 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
+import me.StevenLawson.TotalFreedomMod.TFM_DonatorWorld;
 import me.StevenLawson.TotalFreedomMod.TFM_Superadmin;
 import me.StevenLawson.TotalFreedomMod.TFM_SuperadminList;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
@@ -11,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.ALL, source = SourceType.BOTH)
-@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <salist | saclean | <saadd|sadelete|sainfo> <username>>")
+@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <salist | saclean | donatorworld | <saadd|sadelete|sainfo> <username>>")
 public class Command_srv extends TFM_Command
 {
     @Override
@@ -43,10 +44,27 @@ public class Command_srv extends TFM_Command
                     return false;
                 }
 
+
                 return true;
             }
 
-            return true;
+
+            if (args[0].equalsIgnoreCase("donatorworld"));
+            {
+                {
+                    if (sender_p.getWorld() == TFM_DonatorWorld.getInstance().getDonatorWorld())
+                    {
+                        playerMsg("Going to the main world.");
+                        sender_p.teleport(server.getWorlds().get(0).getSpawnLocation());
+                    }
+                    else
+                    {
+                        playerMsg("Going to the DonatorWorld.");
+                        TFM_DonatorWorld.getInstance().sendToDonatorWorld(sender_p);
+                    }
+                    return true;
+                }
+            }
         }
         else if (args.length == 2)
         {
