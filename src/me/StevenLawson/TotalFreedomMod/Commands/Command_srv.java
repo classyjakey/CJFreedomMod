@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.ALL, source = SourceType.BOTH)
-@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <salist | saclean | donatorworld | <saadd|sadelete|sainfo> <username>>")
+@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <donatorworld | <saadd|sadelete> <username>>")
 public class Command_srv extends TFM_Command
 {
     @Override
@@ -27,28 +27,6 @@ public class Command_srv extends TFM_Command
 
         if (args.length == 1)
         {
-            if (args[0].equals("salist"))
-            {
-                playerMsg("Superadmins: " + StringUtils.join(TFM_SuperadminList.getSuperadminNames(), ", "), ChatColor.GOLD);
-            }
-            else
-            {
-                if (args[0].equals("saclean"))
-                {
-                    TFM_Util.adminAction(sender.getName(), "Cleaning superadmin list.", true);
-                    TFM_SuperadminList.cleanSuperadminList(true);
-                    playerMsg("Superadmins: " + StringUtils.join(TFM_SuperadminList.getSuperadminNames(), ", "), ChatColor.YELLOW);
-                }
-                else
-                {
-                    return false;
-                }
-
-
-                return true;
-            }
-
-
             if (args[0].equalsIgnoreCase("donatorworld"));
             {
                 {
@@ -68,34 +46,6 @@ public class Command_srv extends TFM_Command
         }
         else if (args.length == 2)
         {
-            if (args[0].equalsIgnoreCase("sainfo"))
-            {
-
-                TFM_Superadmin superadmin = TFM_SuperadminList.getAdminEntry(args[1].toLowerCase());
-
-                if (superadmin == null)
-                {
-                    try
-                    {
-                        superadmin = TFM_SuperadminList.getAdminEntry(getPlayer(args[1]).getName().toLowerCase());
-                    }
-                    catch (PlayerNotFoundException ex)
-                    {
-                    }
-                }
-
-                if (superadmin == null)
-                {
-                    playerMsg("Superadmin not found: " + args[1]);
-                }
-                else
-                {
-                    playerMsg(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', superadmin.toString())));
-                }
-
-                return true;
-            }
-
             if (args[0].equalsIgnoreCase("saadd"))
             {
                 Player p = null;
