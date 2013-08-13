@@ -1,52 +1,42 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
-import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
+import me.StevenLawson.TotalFreedomMod.TFM_Util;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 @CommandPermissions(level = AdminLevel.SUPER, source = SourceType.BOTH)
-@CommandParameters(description = "CJFreedom Version To Manage DisguiseCraft ~ Thanks Dartheh <3.", usage = "/<command>")
+@CommandParameters(description = "Shortcut to enable/disable DisguiseCraft.", usage = "/<command>")
 public class Command_dtoggle extends TFM_Command
 {
-
     @Override
     public boolean run(CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-        boolean toggled = false;
-        boolean enabled = true;
-        for (Plugin p : TotalFreedomMod.server.getPluginManager().getPlugins())
+        Plugin disguiseCraft = server.getPluginManager().getPlugin("DisguiseCraft");
+        if (disguiseCraft != null)
         {
-            if (p.getName().equalsIgnoreCase("DisguiseCraft"))
+            PluginManager pluginManager = plugin.getServer().getPluginManager();
+
+            boolean enabled = disguiseCraft.isEnabled();
+            if (enabled)
             {
-                if (p.isEnabled())
-                {
-                    p.getPluginLoader().disablePlugin(p);
-                    enabled = false;
-                }
-                else
-                {
-                    p.getPluginLoader().enablePlugin(p);
-                    enabled = true;
-                }
-                toggled = true;
-            }
-        }
-        if (toggled)
-        {
-            if (!enabled)
-            {
-                TotalFreedomMod.server.broadcastMessage(ChatColor.RED + sender.getName() + " - Disabling DisguiseCraft");
+                pluginManager.disablePlugin(disguiseCraft);
             }
             else
             {
-                TotalFreedomMod.server.broadcastMessage(ChatColor.GREEN + sender.getName() + " - Enabling DisguiseCraft");
+                pluginManager.enablePlugin(disguiseCraft);
             }
+
+            TFM_Util.adminAction(sender.getName(), (!enabled ? "Enabled" : "Disabled") + " DisguiseCraft.", true);
         }
+        else
+        {
+            sender.sendMessage("DisguiseCraft is not installed on this server.");
+        }
+
         return true;
     }
-
 }

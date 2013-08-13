@@ -26,15 +26,15 @@ public class Command_saconfig extends TFM_Command
             }
             else
             {
-                if (!senderIsConsole)
+                if (!TFM_SuperadminList.isSeniorAdmin(sender))
                 {
-                    playerMsg("This command may only be used from the console.");
+                    playerMsg(TotalFreedomMod.MSG_NO_PERMS);
                     return true;
                 }
 
                 if (args[0].equals("clean"))
                 {
-                    TFM_Util.adminAction(sender.getName(), "Cleaning superadmin list.", true);
+                    TFM_Util.adminAction(sender.getName(), "Cleaning superadmin list", true);
                     TFM_SuperadminList.cleanSuperadminList(true);
                     playerMsg("Superadmins: " + StringUtils.join(TFM_SuperadminList.getSuperadminNames(), ", "), ChatColor.YELLOW);
                 }
@@ -66,7 +66,7 @@ public class Command_saconfig extends TFM_Command
                     {
                         superadmin = TFM_SuperadminList.getAdminEntry(getPlayer(args[1]).getName().toLowerCase());
                     }
-                    catch (CantFindPlayerException ex)
+                    catch (PlayerNotFoundException ex)
                     {
                     }
                 }
@@ -77,7 +77,7 @@ public class Command_saconfig extends TFM_Command
                 }
                 else
                 {
-                    playerMsg(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', superadmin.toString())));
+                    playerMsg(ChatColor.stripColor(TFM_Util.colorise(superadmin.toString())));
                 }
 
                 return true;
@@ -98,7 +98,7 @@ public class Command_saconfig extends TFM_Command
                 {
                     p = getPlayer(args[1]);
                 }
-                catch (CantFindPlayerException ex)
+                catch (PlayerNotFoundException ex)
                 {
                     TFM_Superadmin superadmin = TFM_SuperadminList.getAdminEntry(args[1].toLowerCase());
                     if (superadmin != null)
@@ -137,7 +137,7 @@ public class Command_saconfig extends TFM_Command
                 {
                     target_name = getPlayer(target_name).getName();
                 }
-                catch (CantFindPlayerException ex)
+                catch (PlayerNotFoundException ex)
                 {
                 }
 
@@ -165,7 +165,7 @@ public class Command_saconfig extends TFM_Command
                 else if ("disabled".equals(reply))
                 {
                     TFM_Util.playerMsg(sender, "Warning: Could not check if player has a twitter handle!");
-                    TFM_Util.playerMsg(sender, "TwitterBot has been temporarily disabled,, please wait until it get re-enabled", ChatColor.RED);
+                    TFM_Util.playerMsg(sender, "TwitterBot has been temporarily disabled, please wait until it gets re-enabled", ChatColor.RED);
                 }
                 else if ("failed".equals(reply))
                 {

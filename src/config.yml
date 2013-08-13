@@ -1,4 +1,4 @@
-# TotalFreedomMod v2.21 Configuration
+# TotalFreedomMod v2.22 Configuration
 # by Madgeek1450 and DarthSalamon
 
 # Block placement prevention:
@@ -53,6 +53,7 @@ blocked_commands:
   - n:b:/time:Server-side time changing is disabled. Please use /ptime to set your own personal time.
   - n:b:/md:This server now uses DisguiseCraft instead of MobDisguise. Type /d to disguise and /u to undisguise.
   - n:b:/gamemode:Use /creative and /survival to set your gamemode.
+  - n:b:/gamerule:_
   - n:b:/ban:_
   - n:b:/pardon:_
   - n:b:/toggledownfall:_
@@ -134,3 +135,6 @@ pet_protect_enabled: true
 # Logs Registration
 logs_register_password:
 logs_register_url:
+  
+# Mojang service checker
+service_checker_url: http://status.mojang.com/check

@@ -6,16 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import me.StevenLawson.TotalFreedomMod.TFM_CommandBlocker;
-import me.StevenLawson.TotalFreedomMod.TFM_LandmineData;
-import me.StevenLawson.TotalFreedomMod.TFM_Log;
-import me.StevenLawson.TotalFreedomMod.TFM_PlayerData;
-import me.StevenLawson.TotalFreedomMod.TFM_ServerInterface;
-import me.StevenLawson.TotalFreedomMod.TFM_SuperadminList;
-import me.StevenLawson.TotalFreedomMod.TFM_DonatorList;
-import me.StevenLawson.TotalFreedomMod.TFM_UserList;
-import me.StevenLawson.TotalFreedomMod.TFM_Util;
-import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
+import me.StevenLawson.TotalFreedomMod.*;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,18 +22,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.RemoteServerCommandEvent;
-import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class TFM_PlayerListener implements Listener
@@ -68,7 +50,6 @@ public class TFM_PlayerListener implements Listener
                             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
                             player.sendMessage(ChatColor.GRAY + "Water buckets are currently disabled.");
                             event.setCancelled(true);
-                            return;
                         }
                         break;
                     }
@@ -79,7 +60,6 @@ public class TFM_PlayerListener implements Listener
                             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
                             player.sendMessage(ChatColor.GRAY + "Lava buckets are currently disabled.");
                             event.setCancelled(true);
-                            return;
                         }
                         break;
                     }
@@ -91,9 +71,8 @@ public class TFM_PlayerListener implements Listener
                             player.sendMessage(ChatColor.GRAY + "TNT minecarts are currently disabled.");
                             event.setCancelled(true);
                         }
-                    }
                         break;
-
+                    }
                 }
                 break;
             }
@@ -209,7 +188,7 @@ public class TFM_PlayerListener implements Listener
                                     last_block = test_block;
                                 }
 
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(TotalFreedomMod.plugin, new Runnable()
+                                new BukkitRunnable()
                                 {
                                     @Override
                                     public void run()
@@ -221,7 +200,7 @@ public class TFM_PlayerListener implements Listener
                                             tnt_block.setType(Material.AIR);
                                         }
                                     }
-                                }, 30L);
+                                }.runTaskLater(TotalFreedomMod.plugin, 30L);
 
                                 event.setCancelled(true);
                             }
@@ -234,9 +213,20 @@ public class TFM_PlayerListener implements Listener
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerTeleport(PlayerTeleportEvent event)
+    {
+        TFM_AdminWorld.getInstance().validateMovement(event);
+    }
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event)
     {
+        if (!TFM_AdminWorld.getInstance().validateMovement(event))
+        {
+            return;
+        }
+
         Player p = event.getPlayer();
         TFM_PlayerData playerdata = TFM_PlayerData.getPlayerData(p);
 
@@ -332,6 +322,11 @@ public class TFM_PlayerListener implements Listener
             }
         }
 
+        if (TFM_Jumppads.getInstance().mode.isOn())
+        {
+            TFM_Jumppads.getInstance().PlayerMoveEvent(event);
+        }
+
         if (TotalFreedomMod.landminesEnabled && TotalFreedomMod.allowExplosions)
         {
             Iterator<TFM_LandmineData> landmines = TFM_LandmineData.landmines.iterator();
@@ -369,6 +364,7 @@ public class TFM_PlayerListener implements Listener
                 }
             }
         }
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -461,6 +457,13 @@ public class TFM_PlayerListener implements Listener
 
             // Finally, set message
             event.setMessage(message);
+
+            // Set the tag
+            if (playerdata.getTag() != null)
+            {
+                p.setDisplayName((playerdata.getTag() + " " + p.getDisplayName().replaceAll(" ", "")));
+            }
+
         }
         catch (Exception ex)
         {
@@ -485,7 +488,7 @@ public class TFM_PlayerListener implements Listener
 
             playerdata.resetMsgCount();
 
-            TFM_Util.wipeEntities(true, true);
+            TFM_Util.TFM_EntityWiper.wipeEntities(true, true);
 
             event.setCancelled(true);
             return;
@@ -527,7 +530,7 @@ public class TFM_PlayerListener implements Listener
         command = command.toLowerCase().trim();
 
         // Blocked commands
-        if (TFM_CommandBlocker.isCommandBlocked(command, event.getPlayer()))
+        if (TFM_CommandBlockerNew.getInstance().isCommandBlocked(command, event.getPlayer()))
         {
             // CommandBlocker handles messages and broadcasts
             event.setCancelled(true);
@@ -542,24 +545,6 @@ public class TFM_PlayerListener implements Listener
                     TFM_Util.playerMsg(pl, p.getName() + ": " + command);
                 }
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onRemoteServerCommand(RemoteServerCommandEvent event)
-    {
-        if (TFM_CommandBlocker.isCommandBlocked("/" + event.getCommand(), event.getSender()))
-        {
-            event.setCommand("");
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onServerCommand(ServerCommandEvent event)
-    {
-        if (TFM_CommandBlocker.isCommandBlocked("/" + event.getCommand(), event.getSender()))
-        {
-            event.setCommand("");
         }
     }
 
@@ -655,51 +640,17 @@ public class TFM_PlayerListener implements Listener
                     p.setOp(true);
                 }
             }
-            
-            boolean donator_impostor = TFM_DonatorList.isDonatorImpostor(p);
-
-            if (donator_impostor || TFM_DonatorList.isUserDonator(p))
-            {
-                if (!(superadmin_impostor || TFM_SuperadminList.isUserSuperadmin(p)))
-                {
-                    TFM_Util.bcastMsg(ChatColor.AQUA + p.getName() + " is " + TFM_Util.getRank(p));
-                }
-
-                if (donator_impostor)
-                {
-                    p.setOp(false);
-                    p.setGameMode(GameMode.SURVIVAL);
-                    TFM_Util.bcastMsg("Warning: " + p.getName() + " has been flagged as an DONATOR impostor!", ChatColor.RED);
-                }
-                else
-                {
-                    if (TFM_DonatorList.verifyIdentity(p.getName(), p.getAddress().getAddress().getHostAddress()))
-                    {
-                        playerdata.setSuperadminIdVerified(Boolean.TRUE);
-
-                        TFM_DonatorList.updateLastLogin(p);
-                    }
-                    else
-                    {
-                        playerdata.setSuperadminIdVerified(Boolean.FALSE);
-
-                        TFM_Util.bcastMsg("Warning: " + p.getName() + " is an donator, but is using a username not registered to one of their IPs.", ChatColor.RED);
-                    }
-
-                    p.setOp(true);
-                }
-            }
 
             if (TotalFreedomMod.adminOnlyMode)
             {
-                TotalFreedomMod.plugin.getServer().getScheduler().scheduleSyncDelayedTask(TotalFreedomMod.plugin, new Runnable()
+                new BukkitRunnable()
                 {
                     @Override
                     public void run()
                     {
                         p.sendMessage(ChatColor.RED + "Server is currently closed to non-superadmins.");
                     }
-                }, 60L);
+                }.runTaskLater(TotalFreedomMod.plugin, 20L * 3L);
             }
         }
         catch (Throwable ex)
@@ -711,5 +662,5 @@ public class TFM_PlayerListener implements Listener
     public void onPlayerLogin(PlayerLoginEvent event)
     {
         TFM_ServerInterface.handlePlayerLogin(event);
-    }    
+    }
 }
