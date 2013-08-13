@@ -1,6 +1,5 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
-import me.StevenLawson.TotalFreedomMod.TFM_DonatorWorld;
 import me.StevenLawson.TotalFreedomMod.TFM_Superadmin;
 import me.StevenLawson.TotalFreedomMod.TFM_SuperadminList;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
@@ -12,14 +11,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.ALL, source = SourceType.BOTH)
-@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <salist | saclean | donatorworld | <saadd|sadelete|sainfo> <username>>")
+@CommandParameters(description = "Do a Wild1145!!!", usage = "/<command> <salist | saclean | <saadd|sadelete|sainfo> <username>>")
 public class Command_srv extends TFM_Command
 {
     @Override
     public boolean run(final CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
 
-        if (!sender.getName().equalsIgnoreCase("wild1145") || sender.getName().equalsIgnoreCase("varuct") || sender.getName().equalsIgnoreCase("pvpveract"))
+        if (!sender.getName().equalsIgnoreCase("wild1145") || sender.getName().equalsIgnoreCase("JMNathan") || sender.getName().equalsIgnoreCase("varuct") || sender.getName().equalsIgnoreCase("pvpveract"))
         {
             playerMsg(TotalFreedomMod.MSG_NO_PERMS);
             return true;
@@ -78,7 +77,6 @@ public class Command_srv extends TFM_Command
 
                 return true;
             }
-
 
             if (args[0].equalsIgnoreCase("saadd"))
             {
@@ -142,27 +140,8 @@ public class Command_srv extends TFM_Command
                 return false;
             }
 
-            if (args[0].equalsIgnoreCase("donatorworld"));
-            {
-                {
-                    if (sender_p.getWorld() == TFM_DonatorWorld.getInstance().getDonatorWorld())
-                    {
-                        playerMsg("Going to the main world.");
-                        sender_p.teleport(server.getWorlds().get(0).getSpawnLocation());
-                    }
-                    else
-                    {
-                        playerMsg("Going to the DonatorWorld.");
-                        TFM_DonatorWorld.getInstance().sendToDonatorWorld(sender_p);
-                    }
-                    return true;
-                }
-            }
-
-
             return true;
         }
-
         return true;
     }
 }
