@@ -38,6 +38,11 @@ public class TFM_DonatorWorld
         {
             return;
         }
+        
+         if (TFM_Util.SYSADMINS.contains(p.getName()))
+        {
+            return;
+        }
 
         player.teleport(getDonatorWorld().getSpawnLocation());
     }
