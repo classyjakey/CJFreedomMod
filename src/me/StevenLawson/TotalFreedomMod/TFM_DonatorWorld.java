@@ -39,7 +39,7 @@ public class TFM_DonatorWorld
             return;
         }
         
-         if (TFM_Util.SYSADMINS.contains(p.getName()))
+        else if (!TFM_Util.SYSADMINS.contains(player.getName()))
         {
             return;
         }
